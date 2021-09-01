@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom"
 
 import axios from 'axios'
 import Header from '../components/layout/Header'
-import { Container, Content, Button, Icon, IconButton } from 'rsuite'
+import { Container, Content, Button, Icon, IconButton, Form } from 'rsuite'
 
 import { Chapter } from '../models/api/Chapters'
 
@@ -21,12 +21,12 @@ const defaultChapter: Chapter = {
     "updated_at": new Date,
     "questions": [
             {
-                    "id": null,
-                    "chapter_id": null,
-                    "text": "",
-                    "difficulty": null,
-                    "created_at": new Date,
-                    "updated_at": new Date
+                "id": null,
+                "chapter_id": null,
+                "text": "",
+                "difficulty": null,
+                "created_at": new Date,
+                "updated_at": new Date
                   
             }
     ],
@@ -44,8 +44,25 @@ const chapterDisplayStyles: CSSProperties = {
 }
 
 const buttonStyles: CSSProperties = {
-    width: 60,
-    height: 40
+    // width: 147,
+    // height: 30,
+    backgroundColor: '#0D67F2',
+    color: '#ffffff',
+    // borderRadius: 4
+}
+
+const deleteButtonStyles: CSSProperties = {
+    backgroundColor: 'red',
+    color: '#ffffff',
+    marginLeft: 50
+}
+
+const buttonBodyStyles: CSSProperties = {
+    width: 147,
+    height: 30,
+    backgroundColor: '#0D67F2',
+    color: '#ffffff',
+    borderRadius: 4
 }
 
 const headerStyles: CSSProperties = {
@@ -55,40 +72,22 @@ const headerStyles: CSSProperties = {
     alignContent: 'center',
     marginTop: 20,
     marginLeft: 20,
+    marginBottom: 30,
     columnGap: 10
 }
 
 export const ChapterDetails = () => {
+    debugger
     const [{ user }] = UserGlobalState()
     const history = useHistory()
     const host = process.env.REACT_APP_BASEURL
+    const [ chapters, setChapter ] = useState(defaultChapter)
 
-    const [ chapters, setChapter ] = useState({
-        "id": null,
-        "field_id": null,
-        "level_id": null,
-        "chapter_id": null,
-        "name": "",
-        "number": null,
-        "created_at": new Date,
-        "updated_at": new Date,
-        "questions": [
-                {
-                        "id": null,
-                        "chapter_id": null,
-                        "text": "",
-                        "difficulty": null,
-                        "created_at": new Date,
-                        "updated_at": new Date
-                      
-                }
-        ],
-        "chapters": []
-    })
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = React.useState("")
 
     const idChapter = 1
+
 
     useEffect(() => {
         axios.get(`${host}/v1/chapters/${idChapter}`, {
@@ -105,33 +104,85 @@ export const ChapterDetails = () => {
                 setError(err)
                 setLoading(false)
             })
-    }, [chapters])
+    }, [])
 
     return (
         <Container>
             <Content
                 style={headerStyles}
             >
-                <IconButton 
-                    style={buttonStyles} 
+                <IconButton
                     onClick={() => history.push("/chapitres")} 
                     icon={<Icon icon='back-arrow' />}
                 />
-                <span> CHAPITRE MATHEMATIQUES 3ème </span>
+                <h5> CHAPITRE MATHEMATIQUES 3ème </h5>
+                
             </Content>
-            <Content>
-                <h2> Description </h2> <Button> Modifier </Button>
-                <span>Nom {chapters.name} </span>
-                {/* <span>Mise à jour {chapters.updated_at} </span> */}
-                <span> Numèro  {chapters.number} </span>
-                <span> Chapitre parent </span>
-
+            <Content
+                style={{
+                    marginLeft: 60
+                }}
+            >
                 <div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            columnGap: 200
+                        }}
+                    >
+                        <h2> Description </h2> 
+                        <Button> Modifier </Button>
+                    </div>
+                    <hr style={{marginRight: 200 }}/>
+                    
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            columnGap: 200
+                        }}
+                    >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    columnGap: 200
+                                }}
+                            >
+                                <p>Nom {chapters.name} </p>
+                                <p> Mise à jour  </p>
+                            </div>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    columnGap: 200
+                                }}
+                            >
+                                <p> Numèro  {chapters.number} </p>
+                                <p> Chapitre parent </p>
+                            </div>                         
+                    </div>
+                </div>
+
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        alignContent: 'center',
+                        columnGap: 200,
+                    }}
+                >
                     <h2>
                         Questions
                     </h2>
-                    <button 
-                    > + Ajouter une question </button>
+                    <Button
+                        style={buttonStyles} 
+                    > + Ajouter une question </Button>
+                </div>
+                <div>
                     {chapters.questions.map((question) => (
                         <div
                             key={question.id}
@@ -142,16 +193,28 @@ export const ChapterDetails = () => {
                             > 
                                 {question.text} 
                             </span>  
-                            <button >supp</button>
+                            <IconButton style={deleteButtonStyles}  icon={<Icon icon="trash2" />} />
                         </div>
                     ))}
-                </div>
-
-                <div>
+                </div> 
+                
+                <div
+                    style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        alignContent: 'center',
+                        columnGap: 200,
+                        marginBottom: 40
+                    }}
+                >
                     
                     <h2> Sous-chapitre </h2>
-                    <button 
-                    > + Ajouter un chapitre </button>
+                    <Button
+                        style={buttonStyles} 
+                    > + Ajouter un chapitre </Button>
+                </div>
+                <div>
                     {chapters.chapters.map((sChapter) => (
                         <div
                             key={sChapter}
@@ -159,9 +222,10 @@ export const ChapterDetails = () => {
                             <span></span>
                         </div>
                     ))}
-                </div>
+                </div> 
             </Content>
 
         </Container>
     )
 }
+export default ChapterDetails
