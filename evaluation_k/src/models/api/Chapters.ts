@@ -5,4 +5,17 @@ export interface Chapter {
         chapter_id: number
         name: string
         number?: number
+        created_at: Date
+        updated_at: Date
+        questions?: [
+                {
+                        id: number
+                        chapter_id: number
+                        text: string
+                        difficulty: number
+                        created_at: Date
+                        updated_at: Date
+                }
+        ],
+        chapters: []
 }
