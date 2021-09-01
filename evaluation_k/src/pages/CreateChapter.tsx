@@ -6,6 +6,7 @@ import { Container, Content, Button, Form, FormGroup, FormControl, InputPicker, 
     ButtonToolbar, Input } from 'rsuite'
 import { Card } from '@material-ui/core'
 import { Chapter } from '../models/api/Chapters'
+import { async } from 'q';
 
 const headerStyles: CSSProperties = {
     display: 'flex',
@@ -69,10 +70,41 @@ const data2 = [
         "value": "Anglais"
     },
 ]
+
+const fetchData =  async () => {
+    try {
+        const res = 
+        await axios.get(`http://1c1d-213-41-111-106.ngrok.io/v1/chapters/new`, {
+            headers:{
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => {
+                console.log(`axios response:  ${response.data.fields}`)
+                let datafield = response.data.fields
+                // datafield.forEach(element => {
+                //     console.log(element.name)
+                // });
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    } catch(err) {
+        console.log(err)
+    }
+} 
+        
+//     let plop = res.fields
+
+// const  dataFields = 0
+
 export const CreateChapter = () => {
     const host = process.env.REACT_APP_BASEURL
 
     const [ chapter, setChapter] = useState()
+
+    fetchData()
+    
 
     let handleSubmit = (event: any ) => {
         event.preventDefault()
