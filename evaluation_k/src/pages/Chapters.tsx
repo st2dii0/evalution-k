@@ -3,9 +3,10 @@ import { UserGlobalState } from '../core/user'
 import { useHistory } from "react-router-dom"
 
 import axios from 'axios'
+import { Container, Content, Button, Icon, IconButton } from 'rsuite'
+
 
 import Header from '../components/layout/Header'
-import AddChapter from '../components/chapters/AddChapter'
 
 import { Chapter } from '../models/api/Chapters'
 
@@ -18,9 +19,33 @@ const chapterStyles: CSSProperties = {
     marginTop: 60,
     marginBottom: 50
 }
-const headerStyles: CSSProperties = {
-    marginBottom: 20,
 
+const chapterDisplayStyles: CSSProperties = {
+    display: 'flex',
+}
+
+const deleteButtonStyles: CSSProperties = {
+    backgroundColor: 'red',
+    color: '#ffffff',
+    marginLeft: 60,
+    marginRight: 40
+}
+
+const headerStyles: CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+    columnGap: 200,
+    marginBottom: 20,
+}
+
+const buttonStyles: CSSProperties = {
+    // width: 147,
+    // height: 30,
+    backgroundColor: '#0D67F2',
+    color: '#ffffff',
+    // borderRadius: 4
 }
 
 export const Chapters = () => {
@@ -31,12 +56,13 @@ export const Chapters = () => {
     
     
     const [ chapters, setChapter ]: [Chapter[], (chapters: Chapter[]) => void] = useState(defaultChapter)
-    const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true)
-    const [error, setError]: [string, (error: string) => void] = React.useState("")
+    const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
+    const [error, setError]: [string, (error: string) => void] = useState("")
 
     let handleDeleteChapter = (id: number) => {        
         axios.delete(`${host}/v1/chapters/${id}`)
         let newChapters = [...chapters]
+        newChapters.splice(id, 1)
         setChapter(newChapters)
     }
 
@@ -57,29 +83,42 @@ export const Chapters = () => {
             })
     }, [])
     return (
-        <div
+        <Container
             style={chapterStyles}
         >
             {/* <Header /> */}
-            <div
+            <Content
                 style={headerStyles}
             >
                 <h1> Chapitre: Mathématique 4ème </h1>
                 {/* TODO: create view add chapter refer to /chapter/new */}
-                <button onClick={()=> history.push('/chapitres/nouveau')} > + Ajouter un chapitre </button>
-            </div>
-            <div>
+                <Button 
+                    onClick={()=> history.push('/chapitres/nouveau')}
+                    style={buttonStyles}
+                > + Ajouter un chapitre </Button>
+            </Content>
+            <Content>
                 {chapters.map((chapter) => (
                     <div
                         key={chapter.id}
                     >
-                        <span> {chapter.number}. {chapter.name} </span> <button style={{backgroundColor: 'red'}} onClick={()=>handleDeleteChapter(chapter.id)} >supp</button>
+                        <div
+                            style={chapterDisplayStyles}
+                        >  
+                            <span
+                                onClick={() => console.log(`Chapter id: ${chapter.id}`)
+                                }
+                            > 
+                                {chapter.number}. {chapter.name} 
+                            </span>  
+                            <IconButton style={deleteButtonStyles} onClick={()=>handleDeleteChapter(chapter.id)} icon={<Icon icon="trash2" />} />
+                        </div> 
                         <br/>
                     </div>
                 ))}
-            </div>
+            </Content>
 
             {/* <AddChapter /> */}
-        </div>
+        </Container>
     )
 }
