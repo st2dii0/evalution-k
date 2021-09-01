@@ -6,8 +6,10 @@ import { Home } from "./pages/Home"
 import { Chapters } from "./pages/Chapters"
 import { Evaluation } from "./pages/Evaluation"
 import { Questions } from "./pages/Questions"
-import { CreateChapter } from "./pages/CreateChapter";
+import { CreateChapter } from "./pages/CreateChapter"
+import { ChapterDetails } from './pages/ChapterDetails'
 
+import "rsuite/dist/styles/rsuite-default.css"
 import logo from './logo.svg'
 
 import './App.css'
@@ -52,6 +54,7 @@ export const App = () => {
       <Route exact path="/" component={Home} />
       <Route exact path="/chapitres" component={Chapters} />
       <Route exact path="/chapitres/nouveau" component={CreateChapter} />
+      <Route exact path="/chapitres/chapitre/:id" component={ChapterDetails} />
       <Route exact path="/evaluation" component={Evaluation} />
       <Route exact path="/question" component={Questions} />
     </UserProvider>
