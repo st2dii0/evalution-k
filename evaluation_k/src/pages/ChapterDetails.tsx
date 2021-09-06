@@ -88,8 +88,15 @@ export const ChapterDetails = () => {
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = React.useState("")
     
-    
-    
+    const handleClick = (chapter: Chapter) => {
+        history.push(
+            {
+                pathname: `/chapitres/nouveau`,
+                state: chapter
+            }
+        )         
+    }
+
     useEffect(() => {
         axios.get(`${host}/v1/chapters/${location.state.id}`, {
             headers:{
@@ -236,6 +243,7 @@ export const ChapterDetails = () => {
                     
                     <h2> Sous-chapitre </h2>
                     <Button
+                        onClick={() => handleClick()}
                         style={buttonStyles} 
                     > + Ajouter un chapitre </Button>
                 </div>
