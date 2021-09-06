@@ -1,7 +1,7 @@
 import React, { useState, CSSProperties, useEffect } from 'react'
 import { UserGlobalState } from '../core/user'
 import { useHistory } from "react-router-dom"
-
+import { useLocation } from "react-router-dom"
 import axios from 'axios'
 import Header from '../components/layout/Header'
 import { Container, Content, Button, Icon, IconButton, Form } from 'rsuite'
@@ -77,25 +77,26 @@ const headerStyles: CSSProperties = {
 }
 
 export const ChapterDetails = () => {
-    debugger
+    
     const [{ user }] = UserGlobalState()
     const history = useHistory()
+    const location = useLocation()
     const host = process.env.REACT_APP_BASEURL
-    const [ chapters, setChapter ] = useState(defaultChapter)
 
+    const [ chapter, setChapter ] = useState({})
+    
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = React.useState("")
-
-    const idChapter = 1
-
-
+    
+    
+    
     useEffect(() => {
-        axios.get(`${host}/v1/chapters/${idChapter}`, {
+        axios.get(`${host}/v1/chapters/${location.state.id}`, {
             headers:{
                 "Content-Type": "application/json"
             }
         })
-            .then(response => {
+        .then(response => {
                 setChapter(response.data)
                 console.log(response)
                 setLoading(false)
@@ -105,6 +106,43 @@ export const ChapterDetails = () => {
                 setLoading(false)
             })
     }, [])
+
+    const RenderQuestions = () => {
+        if (chapter.questions != undefined){
+            return (
+                <div>
+                    {
+                        chapter.questions.map((question) => (
+                        <div key={question.id}>
+                            <span onClick={() => console.log(`Chapter id: ${question.text}`)}> 
+                                {question.text} 
+                            </span>  
+                            <IconButton style={deleteButtonStyles}  icon={<Icon icon="trash2" />} />
+                        </div>))
+                    }
+                </div>
+            )
+        }else{
+            return ''
+        }
+    }
+
+    const RenderChapters = () => {
+        if (chapter.chapters != undefined){
+            return (
+                <div>
+                    {chapter.chapters.map((sChapter) => (
+                        <div
+                            key={sChapter}
+                        >
+                        </div>
+                    ))}
+                </div> 
+            )
+        }else{
+            return ''
+        }
+    }
 
     return (
         <Container>
@@ -150,7 +188,7 @@ export const ChapterDetails = () => {
                                     columnGap: 200
                                 }}
                             >
-                                <p>Nom {chapters.name} </p>
+                                <p>Nom {chapter.name} </p>
                                 <p> Mise à jour  </p>
                             </div>
                             <div
@@ -160,7 +198,7 @@ export const ChapterDetails = () => {
                                     columnGap: 200
                                 }}
                             >
-                                <p> Numèro  {chapters.number} </p>
+                                <p> Numèro  {chapter.number} </p>
                                 <p> Chapitre parent </p>
                             </div>                         
                     </div>
@@ -182,21 +220,8 @@ export const ChapterDetails = () => {
                         style={buttonStyles} 
                     > + Ajouter une question </Button>
                 </div>
-                <div>
-                    {chapters.questions.map((question) => (
-                        <div
-                            key={question.id}
-                        >
-                            <span
-                                onClick={() => console.log(`Chapter id: ${question.text}`)
-                                }
-                            > 
-                                {question.text} 
-                            </span>  
-                            <IconButton style={deleteButtonStyles}  icon={<Icon icon="trash2" />} />
-                        </div>
-                    ))}
-                </div> 
+
+                <RenderQuestions />
                 
                 <div
                     style={{
@@ -214,15 +239,8 @@ export const ChapterDetails = () => {
                         style={buttonStyles} 
                     > + Ajouter un chapitre </Button>
                 </div>
-                <div>
-                    {chapters.chapters.map((sChapter) => (
-                        <div
-                            key={sChapter}
-                        >
-                            <span></span>
-                        </div>
-                    ))}
-                </div> 
+                <RenderChapters /> 
+
             </Content>
 
         </Container>
