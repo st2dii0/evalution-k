@@ -52,15 +52,17 @@ export const Chapters = () => {
     const [{ user }] = UserGlobalState()
     const history = useHistory()
     const host = process.env.REACT_APP_BASEURL
-    console.log(host);
-    
-    
     const [ chapters, setChapters ]: [Chapter[], (chapters: Chapter[]) => void] = useState(defaultChapter)
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = useState("")
 
-    const handleClick = (id: number) => {
-        history.push(`/chapitres/chapitre/${id}`)
+    const handleClick = (chapter: Chapter) => {
+        history.push(
+            {
+                pathname: `/chapitres/chapitre/${chapter.id}`,
+                state: chapter
+            }
+        )            
     }
 
     useEffect( () => {
@@ -116,7 +118,7 @@ export const Chapters = () => {
                         >  
                             <span
                                 onClick={ 
-                                    () => handleClick(chapter.id)                 
+                                    () => handleClick(chapter)                 
                                 }
                             > 
                             { chapter.number}. {chapter.name}  
