@@ -65,6 +65,18 @@ export const Chapters = () => {
         )            
     }
 
+
+    const handleClickNewchapter = () => {
+
+        history.push({
+            pathname: `/chapitres/nouveau`,
+            state: {
+                field_id: 1,
+                level_id: 1
+            }
+        })
+    }
+
     useEffect( () => {
         axios.get<Chapter[]>(`${host}/v1/chapters/`, {
             headers:{
@@ -104,7 +116,7 @@ export const Chapters = () => {
                 <h1> Chapitre: Mathématique 4ème </h1>
                 {/* TODO: create view add chapter refer to /chapter/new */}
                 <Button 
-                    onClick={()=> history.push('/chapitres/nouveau')}
+                    onClick={()=> handleClickNewchapter()}
                     style={buttonStyles}
                 > + Ajouter un chapitre </Button>
             </Content>
@@ -129,7 +141,6 @@ export const Chapters = () => {
                     </div>
                 ))}
             </Content>
-
             {/* <AddChapter /> */}
         </Container>
     )
