@@ -55,30 +55,22 @@ export const Chapters = () => {
     console.log(host);
     
     
-    const [ chapters, setChapter ]: [Chapter[], (chapters: Chapter[]) => void] = useState(defaultChapter)
+    const [ chapters, setChapters ]: [Chapter[], (chapters: Chapter[]) => void] = useState(defaultChapter)
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = useState("")
-
-    let handleDeleteChapter = (id: number) => {        
-        axios.delete(`${host}/v1/chapters/${id}`)
-        let newChapters = [...chapters]
-        newChapters.splice(id, 1)
-        setChapter(newChapters)
-    }
 
     const handleClick = (id: number) => {
         history.push(`/chapitres/chapitre/${id}`)
     }
 
-    useEffect(()=>{
+    useEffect( () => {
         axios.get<Chapter[]>(`${host}/v1/chapters/`, {
             headers:{
                 "Content-Type": "application/json"
             }
         })
             .then(response => {
-                setChapter(response.data)
-                console.log(response)
+                setChapters(response.data)
                 setLoading(false)
             })
             .catch(err => {
@@ -86,6 +78,19 @@ export const Chapters = () => {
                 setLoading(false)
             })
     }, [])
+
+    const handleDeleteChapter = (id: number, chapters: Chapter[]) => {        
+        axios.delete(`${host}/v1/chapters/${id}`)
+            .then( response => {
+                if(response.status == 204){
+                    // setChapters reset global state => reload
+                    setChapters(chapters.filter(chapter => chapter.id != id))
+                } else {
+                }
+            }
+        )
+    }
+
     return (
         <Container
             style={chapterStyles}
@@ -116,7 +121,7 @@ export const Chapters = () => {
                             > 
                             { chapter.number}. {chapter.name}  
                             </span>  
-                            <IconButton style={deleteButtonStyles} onClick={()=>handleDeleteChapter(chapter.id)} icon={<Icon icon="trash2" />} />
+                            <IconButton style={deleteButtonStyles} onClick={()=>handleDeleteChapter(chapter.id, chapters)} icon={<Icon icon="trash2" />} />
                         </div> 
                         <br/>
                     </div>
