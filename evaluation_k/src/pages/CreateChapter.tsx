@@ -2,11 +2,14 @@ import React, { useState, CSSProperties, useEffect } from 'react'
 import { UserGlobalState } from '../core/user'
 import { useHistory } from "react-router-dom"
 import axios from 'axios'
-import { Container, Content, Button, Form, FormGroup, FormControl, InputPicker, ControlLabel, HelpBlock, 
-    ButtonToolbar, Input } from 'rsuite'
-import { Card } from '@material-ui/core'
+import { 
+    Container, Content, Button, Form, FormGroup, FormControl, InputPicker, ControlLabel, HelpBlock, 
+    ButtonToolbar, Input 
+} from 'rsuite'
 import { Chapter } from '../models/api/Chapters'
-import { async } from 'q';
+
+import { useLocation } from 'react-router-dom'
+
 
 const headerStyles: CSSProperties = {
     display: 'flex',
@@ -71,40 +74,48 @@ const data2 = [
     },
 ]
 
-const fetchData =  async () => {
-    try {
-        const res = 
-        await axios.get(`http://1c1d-213-41-111-106.ngrok.io/v1/chapters/new`, {
-            headers:{
-                "Content-Type": "application/json"
-            }
-        })
-            .then(response => {
-                console.log(`axios response:  ${response.data.fields}`)
-                let datafield = response.data.fields
-                // datafield.forEach(element => {
-                //     console.log(element.name)
-                // });
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    } catch(err) {
-        console.log(err)
-    }
-} 
-        
-//     let plop = res.fields
 
-// const  dataFields = 0
 
 export const CreateChapter = () => {
     const host = process.env.REACT_APP_BASEURL
+    const location = useLocation()
 
-    const [ chapter, setChapter] = useState()
+    console.log('state :', location.state);
+    
+    const [ chapter, setChapter] = useState(location.state)
+
+    
+    // console.log(` obj chapter from sub chapter: ${  }`);
+    
+    const fetchData =  async () => {
+        try {
+            const res = 
+            await axios.get(`${host}/v1/chapters/new`, {
+                headers:{
+                    "Content-Type": "application/json"
+                }
+            })
+                //TODO: Adding condition for sub chapter {with chapter_id} and new chapter {with field_id & level_id}
+                .then(response => {
+                    console.log(`axios response:  ${response.data.fields}`)
+                    let datafield = response.data.fields
+                    // datafield.forEach(element => {
+                    //     console.log(element.name)
+                    // });
+                    
+                    const data_fields = response.data.fields
+                    const data_levels = response.data.levels
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        } catch(err) {
+            console.log(err)
+        }
+    }
 
     fetchData()
-    
+
 
     let handleSubmit = (event: any ) => {
         event.preventDefault()
@@ -148,7 +159,16 @@ export const CreateChapter = () => {
                             width: 300
                         }}
                     />
-                </FormGroup> 
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel> Chapitre parent </ControlLabel>  
+                    <InputPicker 
+                        data={[]}
+                        style={{ width: 224 }}
+                        appearance="default"
+                        placeholder="chapitre parent"
+                    />
+                </FormGroup>
                 <FormGroup>
                     <ControlLabel> Matière </ControlLabel>  
                     <InputPicker 
