@@ -66,6 +66,10 @@ export const Chapters = () => {
         setChapter(newChapters)
     }
 
+    const handleClick = (id: number) => {
+        history.push(`/chapitres/chapitre/${id}`)
+    }
+
     useEffect(()=>{
         axios.get<Chapter[]>(`${host}/v1/chapters/`, {
             headers:{
@@ -106,10 +110,11 @@ export const Chapters = () => {
                             style={chapterDisplayStyles}
                         >  
                             <span
-                                onClick={() => console.log(`Chapter id: ${chapter.id}`)
+                                onClick={ 
+                                    () => handleClick(chapter.id)                 
                                 }
                             > 
-                                {chapter.number}. {chapter.name} 
+                            { chapter.number}. {chapter.name}  
                             </span>  
                             <IconButton style={deleteButtonStyles} onClick={()=>handleDeleteChapter(chapter.id)} icon={<Icon icon="trash2" />} />
                         </div> 
