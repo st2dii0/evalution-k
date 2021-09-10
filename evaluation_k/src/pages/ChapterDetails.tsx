@@ -1,7 +1,6 @@
 import React, { useState, CSSProperties, useEffect } from 'react'
 import { UserGlobalState } from '../core/user'
-import { useHistory } from "react-router-dom"
-import { useLocation } from "react-router-dom"
+import { useHistory, useParams, useLocation, Link } from "react-router-dom"
 import axios from 'axios'
 import Header from '../components/layout/Header'
 import { Container, Content, Button, Icon, IconButton, Form } from 'rsuite'
@@ -17,20 +16,31 @@ const defaultChapter: Chapter = {
     "chapter_id": null,
     "name": "",
     "number": null,
-    "created_at": new Date,
-    "updated_at": new Date,
+    "created_at": new Date(),
+    "updated_at": new Date(),
     "questions": [
             {
                 "id": null,
                 "chapter_id": null,
                 "text": "",
                 "difficulty": null,
-                "created_at": new Date,
-                "updated_at": new Date
+                "created_at": new Date(),
+                "updated_at": new Date()
                   
             }
     ],
-    "chapters": []
+    "chapters": [
+        {
+            "id": null,
+            "field_id": null,
+            "level_id": null,
+            "chapter_id": null,
+            "name": "",
+            "number": null,
+            "created_at": new Date,
+            "updated_at": new Date,
+    }
+    ]
 }
 
 const chapterStyles: CSSProperties = {
@@ -44,11 +54,8 @@ const chapterDisplayStyles: CSSProperties = {
 }
 
 const buttonStyles: CSSProperties = {
-    // width: 147,
-    // height: 30,
     backgroundColor: '#0D67F2',
     color: '#ffffff',
-    // borderRadius: 4
 }
 
 const deleteButtonStyles: CSSProperties = {
@@ -76,37 +83,35 @@ const headerStyles: CSSProperties = {
     columnGap: 10
 }
 
+
 export const ChapterDetails = () => {
     
     const [{ user }] = UserGlobalState()
     const history = useHistory()
     const location = useLocation()
+    const { id } = useParams<{id: string}>()
     const host = process.env.REACT_APP_BASEURL
-
-    const [ chapter, setChapter ] = useState({})
-    
+    const [ chapter, setChapter ] = useState<Chapter>(defaultChapter)   
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = React.useState("")
     
-    const handleClick = (chapter: Chapter) => {
+    const handleClickNewSubChapter = (chapter: Chapter) => {
         history.push(
             {
-                pathname: `/chapitres/nouveau`,
-                state: chapter
+                pathname: `/chapitres/${chapter.id}/nouveau`,
             }
         )         
     }
 
     useEffect(() => {
-        axios.get(`${host}/v1/chapters/${location.state.id}`, {
+        axios.get(`${host}/v1/chapters/${id}`, {
             headers:{
                 "Content-Type": "application/json"
             }
         })
         .then(response => {
                 setChapter(response.data)
-                console.log(response)
-                setLoading(false)
+                setLoading(false)                
             })
             .catch(err => {
                 setError(err)
@@ -114,44 +119,8 @@ export const ChapterDetails = () => {
             })
     }, [])
 
-    const RenderQuestions = () => {
-        if (chapter.questions != undefined){
-            return (
-                <div>
-                    {
-                        chapter.questions.map((question) => (
-                        <div key={question.id}>
-                            <span onClick={() => console.log(`Chapter id: ${question.text}`)}> 
-                                {question.text} 
-                            </span>  
-                            <IconButton style={deleteButtonStyles}  icon={<Icon icon="trash2" />} />
-                        </div>))
-                    }
-                </div>
-            )
-        }else{
-            return ''
-        }
-    }
-
-    const RenderChapters = () => {
-        if (chapter.chapters != undefined){
-            return (
-                <div>
-                    {chapter.chapters.map((sChapter) => (
-                        <div
-                            key={sChapter}
-                        >
-                        </div>
-                    ))}
-                </div> 
-            )
-        }else{
-            return ''
-        }
-    }
-
     return (
+        
         <Container>
             <Content
                 style={headerStyles}
@@ -195,18 +164,20 @@ export const ChapterDetails = () => {
                                     columnGap: 200
                                 }}
                             >
-                                <p>Nom {chapter.name} </p>
-                                <p> Mise à jour  </p>
+                                <p> <b> Nom : </b> { chapter.name} </p>
+                                //TODO: Change date format to dd/mm/yyyy
+                                <p> <b> Mise à jour : </b>  {chapter.updated_at.toString()}  </p>
                             </div>
                             <div
                                 style={{
                                     display: 'flex',
                                     flexDirection: 'row',
-                                    columnGap: 200
+                                    alignContent: 'center',
+                                    columnGap: 235
                                 }}
                             >
-                                <p> Numèro  {chapter.number} </p>
-                                <p> Chapitre parent </p>
+                                <p> <b> Numèro : </b>   {chapter.number} </p>
+                                <p> <b> Chapitre parent : </b>  {chapter.chapter_id} </p>
                             </div>                         
                     </div>
                 </div>
@@ -228,8 +199,20 @@ export const ChapterDetails = () => {
                     > + Ajouter une question </Button>
                 </div>
 
-                <RenderQuestions />
-                
+                <div>
+                    {
+                        chapter.questions !== undefined ?  
+                        chapter.questions.map((question, idx) => (
+                        <div key={idx}>
+                            <span onClick={() => console.log(`Chapter id: ${question.text}`)}> 
+                                {question.text} 
+                            </span>
+                            <IconButton style={deleteButtonStyles}  icon={<Icon icon="trash2" />} />
+                        </div>))
+                        : <></>
+                    }
+                </div>
+
                 <div
                     style={{
                         display: 'flex',
@@ -243,15 +226,38 @@ export const ChapterDetails = () => {
                     
                     <h2> Sous-chapitre </h2>
                     <Button
-                        onClick={() => handleClick()}
+                        onClick={() => handleClickNewSubChapter(chapter)}
                         style={buttonStyles} 
                     > + Ajouter un chapitre </Button>
                 </div>
-                <RenderChapters /> 
+                
+                <Content>
+                    {
+                        chapter.chapters !== undefined ?
+                        chapter.chapters.map((chapter, idx) => (
+                        <div
+                            key={idx}
+                        >
+                            <div>
+                                <span 
+                                    onClick={() => {
+                                        history.push(`/chapitres/${chapter.id}`)
+                                        setChapter({...chapter, id: chapter.id})
+                                    }}>
+                                    { chapter.number != null ? `${chapter.number}. ` :  ''} {chapter.name}
+                                </span>
+                                <IconButton style={deleteButtonStyles}  icon={<Icon icon="trash2" />} />
+                            </div>
+                        </div>
+                    ))
+                    : <></>
+                }
+                </Content>  
 
             </Content>
 
         </Container>
+    
     )
 }
 export default ChapterDetails
