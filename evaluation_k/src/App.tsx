@@ -8,10 +8,9 @@ import { Evaluation } from "./pages/Evaluation"
 import { Questions } from "./pages/Questions"
 import { CreateChapter } from "./pages/CreateChapter"
 import { ChapterDetails } from './pages/ChapterDetails'
+import { CreateQuestion } from './pages/CreateQuestion';
 
 import "rsuite/dist/styles/rsuite-default.css"
-import logo from './logo.svg'
-
 import './App.css'
 
 const user = localStorage.getItem("user");
@@ -53,10 +52,11 @@ export const App = () => {
     <UserProvider initialState={userInitialState} reducer={reducer}>
       <Route exact path="/" component={Home} />
       <Route exact path="/chapitres" component={Chapters} />
-      <Route exact path="/chapitres/nouveau" component={CreateChapter} />
-      <Route exact path="/chapitres/chapitre/:id" component={ChapterDetails} />
-      <Route exact path="/evaluation" component={Evaluation} />
-      <Route exact path="/question" component={Questions} />
+      <Route exact path="/chapitres/:id" component={ChapterDetails} />
+      <Route path="/chapitres/:id/nouveau" component={CreateChapter} />
+      <Route path="/matiere/:field_id/niveau/:level_id/chapitre/nouveau" component={CreateChapter} />
+      <Route path="/evaluation" component={Evaluation} />
+      <Route path="/question" component={Questions} />
     </UserProvider>
   );
 }
