@@ -1,12 +1,9 @@
 import React, { useState, CSSProperties, useEffect } from 'react'
 import { UserGlobalState } from '../core/user'
-import { useHistory } from "react-router-dom"
+import { useHistory, Link } from "react-router-dom"
 
 import axios from 'axios'
 import { Container, Content, Button, Icon, IconButton } from 'rsuite'
-
-
-import Header from '../components/layout/Header'
 
 import { Chapter } from '../models/api/Chapters'
 
@@ -17,7 +14,8 @@ const defaultChapter: Chapter[] = []
 const chapterStyles: CSSProperties = {
     marginLeft: 30,
     marginTop: 60,
-    marginBottom: 50
+    marginBottom: 50,
+    textDecoration: 'none'
 }
 
 const chapterDisplayStyles: CSSProperties = {
@@ -25,10 +23,11 @@ const chapterDisplayStyles: CSSProperties = {
 }
 
 const deleteButtonStyles: CSSProperties = {
+    display:' flex', 
+    justifyContent: 'flex-end',
     backgroundColor: 'red',
     color: '#ffffff',
     marginLeft: 60,
-    marginRight: 40
 }
 
 const headerStyles: CSSProperties = {
@@ -41,11 +40,8 @@ const headerStyles: CSSProperties = {
 }
 
 const buttonStyles: CSSProperties = {
-    // width: 147,
-    // height: 30,
     backgroundColor: '#0D67F2',
     color: '#ffffff',
-    // borderRadius: 4
 }
 
 export const Chapters = () => {
@@ -56,24 +52,10 @@ export const Chapters = () => {
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = useState("")
 
-    const handleClick = (chapter: Chapter) => {
-        history.push(
-            {
-                pathname: `/chapitres/chapitre/${chapter.id}`,
-                state: chapter
-            }
-        )            
-    }
-
-
     const handleClickNewchapter = () => {
-
         history.push({
-            pathname: `/chapitres/nouveau`,
-            state: {
-                field_id: 1,
-                level_id: 1
-            }
+            //TODO: Change this url when new features comes
+            pathname: `/matiere/${1}/niveau/${1}/chapitre/nouveau`,
         })
     }
 
@@ -96,9 +78,9 @@ export const Chapters = () => {
     const handleDeleteChapter = (id: number, chapters: Chapter[]) => {        
         axios.delete(`${host}/v1/chapters/${id}`)
             .then( response => {
-                if(response.status == 204){
+                if(response.status === 204){
                     // setChapters reset global state => reload
-                    setChapters(chapters.filter(chapter => chapter.id != id))
+                    setChapters(chapters.filter(chapter => chapter.id !== id))
                 } else {
                 }
             }
@@ -109,39 +91,34 @@ export const Chapters = () => {
         <Container
             style={chapterStyles}
         >
-            {/* <Header /> */}
             <Content
                 style={headerStyles}
             >
-                <h1> Chapitre: Mathématique 4ème </h1>
-                {/* TODO: create view add chapter refer to /chapter/new */}
+                <h1> Chapitre: Mathématiques 3ème </h1>
                 <Button 
                     onClick={()=> handleClickNewchapter()}
                     style={buttonStyles}
                 > + Ajouter un chapitre </Button>
             </Content>
-            <Content>
-                {chapters.map((chapter) => (
-                    <div
-                        key={chapter.id}
-                    >
-                        <div
-                            style={chapterDisplayStyles}
-                        >  
-                            <span
-                                onClick={ 
-                                    () => handleClick(chapter)                 
-                                }
-                            > 
-                            { chapter.number}. {chapter.name}  
-                            </span>  
-                            <IconButton style={deleteButtonStyles} onClick={()=>handleDeleteChapter(chapter.id, chapters)} icon={<Icon icon="trash2" />} />
+            <Content
+                style={chapterStyles}
+            >
+                {chapters.map((chapter, idx) => (
+                    <div key={idx}>
+                        <div style={chapterDisplayStyles}> 
+                        <Link to={`/chapitres/${chapter.id}`}> 
+                            { chapter.number != null ? `${chapter.number}. ` :  ''} {chapter.name}  
+                        </Link> 
+                        <IconButton 
+                            style={deleteButtonStyles} 
+                            onClick={()=>handleDeleteChapter(chapter.id, chapters)} 
+                            icon={<Icon icon="trash2" />} 
+                        />
                         </div> 
                         <br/>
                     </div>
                 ))}
             </Content>
-            {/* <AddChapter /> */}
         </Container>
     )
 }
