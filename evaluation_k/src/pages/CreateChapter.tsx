@@ -61,15 +61,17 @@ export const CreateChapter = () => {
     
     let handleSubmit = async () => {
         
-        //TODO: Check why setChapter does follow async rule, update occurs on 2nd try
+        {/*TODO: Check why setChapter does follow async rule, update occurs on 2nd try*/}
         const nId = Number(id)
         const nField_id = Number(field_id)
         const nLevel_id = Number(level_id)
         if(id !== undefined){
             setChapter({...chapter, chapter_id: nId, field_id: 1, level_id: 1})
+            // setChapter({...chapter, chapter_id: nId, field_id: 1, level_id: 1})
             console.log('chapter if id :',chapter)
         } else if (field_id && level_id !== undefined ) {
             setChapter({...chapter, field_id: nField_id, level_id: nLevel_id});
+            // setChapter({...chapter, field_id: nField_id, level_id: nLevel_id});
             console.log('chapter if field and level', chapter);
         }
         
@@ -138,48 +140,6 @@ export const CreateChapter = () => {
               }}
             />
           </FormGroup>
-          {/* <FormGroup>
-            <ControlLabel> Chapitre parent </ControlLabel>
-            <InputPicker
-              data={[]}
-              style={{ width: 224 }}
-              appearance="default"
-              placeholder="chapitre parent"
-            />
-          </FormGroup> */}
-          {/* <FormGroup>
-            <ControlLabel> Matière </ControlLabel>
-            <SelectPicker
-              searchable={false}
-              data={fields}
-              labelKey="name"
-              valueKey="id"
-              style={{ width: 224 }}
-              appearance="default"
-              placeholder="aucun"
-              onSelect={value => {
-                  setChapter({...chapter, field_id: value})
-                  console.log('matière :', value);
-                  
-              }}
-            />
-          </FormGroup>
-          <FormGroup>
-            <ControlLabel> Niveau </ControlLabel>
-            <SelectPicker
-              searchable={false}
-              labelKey="name"
-              valueKey="id"
-              data={levels}
-              style={{ width: 224 }}
-              appearance="default"
-              placeholder="aucun"
-              onSelect={value => {
-                  setChapter({...chapter, level_id: value})
-                  console.log('niveau :', value);
-              }}
-            />
-          </FormGroup> */}
           <Button
             appearance="primary"
             style={{
