@@ -54,7 +54,7 @@ export const Chapters = () => {
 
     const handleClickNewchapter = () => {
         history.push({
-            //TODO: Change this url when new features comes
+            // {/*TODO: Change this url when new features comes */}
             pathname: `/matiere/${1}/niveau/${1}/chapitre/nouveau`,
         })
     }
@@ -81,7 +81,6 @@ export const Chapters = () => {
                 if(response.status === 204){
                     // setChapters reset global state => reload
                     setChapters(chapters.filter(chapter => chapter.id !== id))
-                } else {
                 }
             }
         )
