@@ -5,10 +5,9 @@ import { UserProvider, UserState } from "./core/user"
 import { Home } from "./pages/Home"
 import { Chapters } from "./pages/Chapters"
 import { Evaluation } from "./pages/Evaluation"
-import { Questions } from "./pages/Questions"
+import { CreateQuestions } from "./pages/CreateQuestions"
 import { CreateChapter } from "./pages/CreateChapter"
 import { ChapterDetails } from './pages/ChapterDetails'
-import { CreateQuestion } from './pages/CreateQuestion';
 
 import "rsuite/dist/styles/rsuite-default.css"
 import './App.css'
@@ -56,7 +55,7 @@ export const App = () => {
       <Route path="/chapitres/:id/nouveau" component={CreateChapter} />
       <Route path="/matiere/:field_id/niveau/:level_id/chapitre/nouveau" component={CreateChapter} />
       <Route path="/evaluation" component={Evaluation} />
-      <Route path="/question" component={Questions} />
+      <Route path="/chapitres/:id/questions/nouveau" component={CreateQuestions} />
     </UserProvider>
   );
 }
