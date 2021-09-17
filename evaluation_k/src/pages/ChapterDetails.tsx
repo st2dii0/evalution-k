@@ -6,6 +6,7 @@ import Header from '../components/layout/Header'
 import { Container, Content, Button, Icon, IconButton, Form } from 'rsuite'
 
 import { Chapter } from '../models/api/Chapters'
+import { Question } from '../models/api/Question';
 
 require('dotenv').config()
 
@@ -92,6 +93,7 @@ export const ChapterDetails = () => {
     const { id } = useParams<{id: string}>()
     const host = process.env.REACT_APP_BASEURL
     const [ chapter, setChapter ] = useState<Chapter>(defaultChapter)   
+    const [ question, setQuestion ] = useState()
     const [loading, setLoading]: [boolean, (loading: boolean) => void] = React.useState<boolean>(true)
     const [error, setError]: [string, (error: string) => void] = React.useState("")
     
@@ -101,6 +103,21 @@ export const ChapterDetails = () => {
                 pathname: `/chapitres/${chapter.id}/nouveau`,
             }
         )         
+    }
+
+    const handleClickNewQuestion = (chapter: Chapter) => {
+        history.push({
+            pathname: `/chapitres/${chapter.id}/questions/nouveau`
+        })
+    }
+
+    const handleDeleteChapter = (id: number, chapters: Chapter) => {
+        axios.delete(`${host}/v1/questions/${id}`)
+            .then(response => {
+                if(response.status === 204){
+                    // setChapter(chapters.filter(chapter => chapter.questions[].id !== id))
+                }
+            })
     }
 
     useEffect(() => {
@@ -165,7 +182,7 @@ export const ChapterDetails = () => {
                                 }}
                             >
                                 <p> <b> Nom : </b> { chapter.name} </p>
-                                //TODO: Change date format to dd/mm/yyyy
+                                {/* TODO: Change date format to dd/mm/yyyy */}
                                 <p> <b> Mise à jour : </b>  {chapter.updated_at.toString()}  </p>
                             </div>
                             <div
@@ -195,7 +212,8 @@ export const ChapterDetails = () => {
                         Questions
                     </h2>
                     <Button
-                        style={buttonStyles} 
+                        style={buttonStyles}
+                        onClick={()=> handleClickNewQuestion(chapter)}
                     > + Ajouter une question </Button>
                 </div>
 
