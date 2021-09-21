@@ -1,6 +1,6 @@
 import React, { useState, CSSProperties, useEffect } from 'react'
 import { UserGlobalState } from '../core/user'
-import { useHistory, Link } from "react-router-dom"
+import { useHistory, Link, useParams } from "react-router-dom"
 
 import axios from 'axios'
 import { Container, Content, Button, Icon, IconButton } from 'rsuite'
@@ -55,7 +55,7 @@ export const Chapters = () => {
     const handleClickNewchapter = () => {
         history.push({
             // {/*TODO: Change this url when new features comes */}
-            pathname: `/matiere/${1}/niveau/${1}/chapitre/nouveau`,
+            pathname: `/matiere/${1}/niveau/${1}/chapitre/nouveau`
         })
     }
 
@@ -75,11 +75,10 @@ export const Chapters = () => {
             })
     }, [])
 
-    const handleDeleteChapter = (id: number, chapters: Chapter[]) => {        
+    const handleDeleteChapter = (id: number) => {    
         axios.delete(`${host}/v1/chapters/${id}`)
             .then( response => {
                 if(response.status === 204){
-                    // setChapters reset global state => reload
                     setChapters(chapters.filter(chapter => chapter.id !== id))
                 }
             }
@@ -110,7 +109,7 @@ export const Chapters = () => {
                         </Link> 
                         <IconButton 
                             style={deleteButtonStyles} 
-                            onClick={()=>handleDeleteChapter(chapter.id, chapters)} 
+                            onClick={()=>handleDeleteChapter(chapter.id)} 
                             icon={<Icon icon="trash2" />} 
                         />
                         </div> 
