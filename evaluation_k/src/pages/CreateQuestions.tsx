@@ -70,11 +70,6 @@ interface answerAttribute {
     correct: boolean
     text: string
 }
-const defaultAnswers_attributes: answerAttribute[] = [{
-    "correct": null,
-    "text": null
-}]
-
 
 export const CreateQuestions = () => {
     const host = process.env.REACT_APP_BASEURL
@@ -86,10 +81,10 @@ export const CreateQuestions = () => {
     const [chapter, setChapter ] = useState<Chapter>(defaultChapter)
 
     const [ questions, setQuestions] = useState<Question>(defaultQuestion)
-    
-    const [ answers_attributes, setAnswers_attributes ] = useState(defaultAnswers_attributes)
-    const [ answers_attributesText, setanswers_attributesText ] = useState("")
-    const [ answers_attributesCorrect, setanswers_attributesCorrect ] = useState(false)
+
+    const [ answers_attributes, setAnswers_attributes ] = useState<answerAttribute[]>([])
+    const [ answers_attributesText, setanswers_attributesText ] = useState<string>()
+    const [ answers_attributesCorrect, setanswers_attributesCorrect ] = useState<boolean>()
 
     let addNewQuestionAttributes = () => {
         setAnswers_attributes([...answers_attributes, {
@@ -97,6 +92,7 @@ export const CreateQuestions = () => {
             text: ""
         }])
     }
+
 
     const fetchDataChapter = async () => {
         await axios.get<Chapter>(`${host}/v1/chapters/${idChapter}`, {
@@ -116,11 +112,10 @@ export const CreateQuestions = () => {
     }
 
     const handleSubmit =  () => {
+        //TODO: make a setQuestions intead of setAttributes
+        // setQuestions({...questions, answers_attributes: setAnswers_attributes(answers_attributes)})
 
-        setAnswers_attributes([...answers_attributes, {
-            text: answers_attributesText,
-            correct: answers_attributesCorrect
-        }])
+        console.log('Text :',answers_attributesText);
         console.log('answers_attributes :', answers_attributes);
         console.log('Question :', questions);
         console.log('Answer_attributes :', answers_attributes);
@@ -128,7 +123,7 @@ export const CreateQuestions = () => {
     }
 
     // fetchDataChapter()
-    console.log(chapter);    
+    // console.log(chapter);
 
     return (
 
@@ -164,7 +159,7 @@ export const CreateQuestions = () => {
                             type="number"
                             onChange={value => {
                                 var n = Number(value);
-                                console.log(n);
+                                console.log('Difficulty :', n);
                                 
                                 setQuestions({...questions, difficulty: n})
                             }}
@@ -179,6 +174,7 @@ export const CreateQuestions = () => {
                             }}
                             onChange={value => {
                                 setQuestions({...questions, text: value})
+                                // console.log('Text :', value);
                             }}
                         />
                     </FormGroup>
@@ -188,6 +184,19 @@ export const CreateQuestions = () => {
                             {answers_attributes.map((element, index) => (
                                 <div
                                     key={index}
+                                    onBlur={() => {
+                                        console.log('trigger onBlur');
+                                        //TODO/ check splice behaviour potentially removing 2nd answer_attributes
+                                        setAnswers_attributes([
+                                            ...answers_attributes.slice(0, index), 
+                                            {
+                                                text: answers_attributesText, 
+                                                correct: answers_attributesCorrect 
+                                            }, 
+                                            ...answers_attributes.slice(index, +1)
+                                        ])
+                                        // setAnswers_attributes([{text: answers_attributesText, correct: answers_attributesCorrect}])
+                                    }} 
                                 > 
 
                                     <ControlLabel> Texte </ControlLabel>
@@ -201,13 +210,18 @@ export const CreateQuestions = () => {
                                         }}
                                     />
                                     <Checkbox
-                                        onChange={(checked: boolean)=> {
+                                        defaultChecked={false}
+                                        onChange={(e, checked: boolean)=> {
+                                            //TODO: Behave weirdly
                                             setanswers_attributesCorrect(checked)
+                                            console.log('WHYYYYY', checked);
+                                            console.log('WHYYYYY typeof', typeof(checked));
+                                            
                                         }}
-                                    >
+                                        >
                                         Bonne réponse
                                     </Checkbox>
-                                    <hr /> 
+                                    <hr />
                                 </div>
                             ))}
                             
