@@ -17,12 +17,10 @@ import {
     Icon,
     Checkbox
 } from 'rsuite'
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import { Question } from '../models/api/Question';
 import { Chapter } from '../models/api/Chapters';
-import { number } from 'prop-types';
-
 
 
 const headerStyles: CSSProperties = {
@@ -84,7 +82,7 @@ export const CreateQuestions = () => {
 
     const [ answers_attributes, setAnswers_attributes ] = useState<answerAttribute[]>([])
     const [ answers_attributesText, setanswers_attributesText ] = useState<string>()
-    const [ answers_attributesCorrect, setanswers_attributesCorrect ] = useState<boolean>()
+    const [ answers_attributesCorrect, setanswers_attributesCorrect ] = useState<boolean>(false)
 
     let addNewQuestionAttributes = () => {
         setAnswers_attributes([...answers_attributes, {
@@ -92,7 +90,6 @@ export const CreateQuestions = () => {
             text: ""
         }])
     }
-
 
     const fetchDataChapter = async () => {
         await axios.get<Chapter>(`${host}/v1/chapters/${idChapter}`, {
@@ -140,7 +137,7 @@ export const CreateQuestions = () => {
                 }}
             >
                 <IconButton
-                    onClick={() => history.push(`/chapitres/${chapter.id}/`)} 
+                    onClick={() => history.push(`/chapitres/${idChapter}/`)} 
                     icon={<Icon icon='back-arrow' />}
                 />
                 <h5> Informations sur la question </h5>
@@ -213,7 +210,7 @@ export const CreateQuestions = () => {
                                         defaultChecked={false}
                                         onChange={(e, checked: boolean)=> {
                                             //TODO: Behave weirdly
-                                            setanswers_attributesCorrect(checked)
+                                            setanswers_attributesCorrect(checked);
                                             console.log('WHYYYYY', checked);
                                             console.log('WHYYYYY typeof', typeof(checked));
                                             
@@ -235,8 +232,7 @@ export const CreateQuestions = () => {
                                 color: '#ffffff',
                                 marginLeft: 30
                             }}
-                            onClick={() => addNewQuestionAttributes()}
-
+                            onMouseDown={() => addNewQuestionAttributes()}
                         >
                             Ajouter une question
                         </Button>
@@ -247,7 +243,7 @@ export const CreateQuestions = () => {
                                 color: '#ffffff',
                                 marginLeft: 30
                             }}
-                            onClick={handleSubmit}
+                            onMouseDown={handleSubmit}
                         >
                             Enregister
                         </Button>
