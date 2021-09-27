@@ -1,4 +1,4 @@
-import React, {  CSSProperties, useState } from 'react'
+import React, {  CSSProperties, useState, useEffect } from 'react'
 import { 
     Container,
     Content,
@@ -19,7 +19,7 @@ import {
 } from 'rsuite'
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
-import { Question } from '../models/api/Question';
+import { Question, Answers_Attributes } from '../models/api/Question';
 import { Chapter } from '../models/api/Chapters';
 
 
@@ -30,97 +30,78 @@ const headerStyles: CSSProperties = {
     marginBottom: 50
 };
 
-const defaultChapter: Chapter = {
-    "id": null,
-    "field_id": null,
-    "level_id": null,
-    "chapter_id": null,
-    "name": "",
-    "number": null,
-    "created_at": new Date(),
-    "updated_at": new Date(),
-    "questions": [
-            {
-                "id": null,
-                "chapter_id": null,
-                "text": "",
-                "difficulty": null,
-                "created_at": new Date(),
-                "updated_at": new Date()
-                  
-            }
-    ]
-}
 
 const defaultQuestion: Question = {
     "id": null,
     "text": null,
     "difficulty": null,
-    'answers_attributes': [
+    "answers_attributes": [
         {
-            'correct': null,
-            'text': null
+            "correct": null,
+            "text": null
         }
     ]
 }
 
-interface answerAttribute {
-    correct: boolean
-    text: string
-}
+
+const defaultAnwswer_Attributes: Answers_Attributes[] = [
+    {
+        'text': null,
+        'correct': false
+    }
+]
+    
 
 export const CreateQuestions = () => {
     const host = process.env.REACT_APP_BASEURL
     const history = useHistory()
-    const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
+    const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
     const [error, setError]: [string, (error: string) => void] = useState("")
     const { id } = useParams<{id: string}>()
     const idChapter = Number(id)
-    const [chapter, setChapter ] = useState<Chapter>(defaultChapter)
-
+    
     const [ questions, setQuestions] = useState<Question>(defaultQuestion)
+    const [ answers_attributes, setAnswers_attributes ] = useState<Answers_Attributes[]>(defaultAnwswer_Attributes)
 
-    const [ answers_attributes, setAnswers_attributes ] = useState<answerAttribute[]>([])
-    const [ answers_attributesText, setanswers_attributesText ] = useState<string>()
-    const [ answers_attributesCorrect, setanswers_attributesCorrect ] = useState<boolean>(false)
 
     let addNewQuestionAttributes = () => {
+        console.log("AddNewQuestionAttributes")
         setAnswers_attributes([...answers_attributes, {
-            correct: false,
-            text: ""
+            text: "",
+            correct: false
         }])
     }
+    
+    const updateItem =(index: number, whichvalue: string, newvalue: string | boolean)=> {
+        let newAnswers: Answers_Attributes = answers_attributes[index]
+        newAnswers[whichvalue] = newvalue
+        setAnswers_attributes([
+            ...answers_attributes.slice(0, index),
+            newAnswers,
+            ...answers_attributes.slice(index + 1)
+        ]);
+    }
 
-    const fetchDataChapter = async () => {
-        await axios.get<Chapter>(`${host}/v1/chapters/${idChapter}`, {
-            headers:{
-                "Content-Type": "application/json"
-            }
-        })
+    const handleSubmit = async () => {
+        await setQuestions({...questions, answers_attributes})
+        setLoading(true)
+        console.log('Question :', questions);
+
+        if(loading === true) {
+            axios.post(`${host}/v1/chapters/${idChapter}/questions`, {
+                questions
+            })
             .then(response => {
-                setLoading(true)
-                setChapter(response.data)
-                setLoading(false)
+                console.log(response);          
             })
             .catch(err => {
                 setError(err)
-                setLoading(false)
+                console.log(err);
             })
-    }
+        }
 
-    const handleSubmit =  () => {
-        //TODO: make a setQuestions intead of setAttributes
-        // setQuestions({...questions, answers_attributes: setAnswers_attributes(answers_attributes)})
-
-        console.log('Text :',answers_attributesText);
         console.log('answers_attributes :', answers_attributes);
-        console.log('Question :', questions);
-        console.log('Answer_attributes :', answers_attributes);
-        console.log('Chapter :', chapter);
     }
-
-    // fetchDataChapter()
-    // console.log(chapter);
 
     return (
 
@@ -128,7 +109,7 @@ export const CreateQuestions = () => {
             <Content
                 style={headerStyles}
             >
-                <h1> Questions </h1>
+                <h1> Détail de la question </h1>
             </Content>
             <Content
                 style={{
@@ -156,22 +137,18 @@ export const CreateQuestions = () => {
                             type="number"
                             onChange={value => {
                                 var n = Number(value);
-                                console.log('Difficulty :', n);
-                                
                                 setQuestions({...questions, difficulty: n})
                             }}
                         />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel> Texte </ControlLabel>
-
                         <Input
                             style={{
                               width: 600
                             }}
                             onChange={value => {
                                 setQuestions({...questions, text: value})
-                                // console.log('Text :', value);
                             }}
                         />
                     </FormGroup>
@@ -180,20 +157,7 @@ export const CreateQuestions = () => {
                         <div>
                             {answers_attributes.map((element, index) => (
                                 <div
-                                    key={index}
-                                    onBlur={() => {
-                                        console.log('trigger onBlur');
-                                        //TODO/ check splice behaviour potentially removing 2nd answer_attributes
-                                        setAnswers_attributes([
-                                            ...answers_attributes.slice(0, index), 
-                                            {
-                                                text: answers_attributesText, 
-                                                correct: answers_attributesCorrect 
-                                            }, 
-                                            ...answers_attributes.slice(index, +1)
-                                        ])
-                                        // setAnswers_attributes([{text: answers_attributesText, correct: answers_attributesCorrect}])
-                                    }} 
+                                    key={index} 
                                 > 
 
                                     <ControlLabel> Texte </ControlLabel>
@@ -202,21 +166,16 @@ export const CreateQuestions = () => {
                                         width: 600
                                         }}
                                         onChange={value => {
-                                            setanswers_attributesText(value)
-                                            // setAnswers_attributes({...answers_attributes, text: value})
+                                            updateItem(index, "text", value)
                                         }}
                                     />
                                     <Checkbox
                                         defaultChecked={false}
                                         onChange={(e, checked: boolean)=> {
-                                            //TODO: Behave weirdly
-                                            setanswers_attributesCorrect(checked);
-                                            console.log('WHYYYYY', checked);
-                                            console.log('WHYYYYY typeof', typeof(checked));
-                                            
+                                            updateItem(index, "correct", checked)
                                         }}
                                         >
-                                        Bonne réponse
+                                        Correcte
                                     </Checkbox>
                                     <hr />
                                 </div>
@@ -232,7 +191,7 @@ export const CreateQuestions = () => {
                                 color: '#ffffff',
                                 marginLeft: 30
                             }}
-                            onMouseDown={() => addNewQuestionAttributes()}
+                            onClick={() => addNewQuestionAttributes()}
                         >
                             Ajouter une question
                         </Button>
@@ -243,7 +202,7 @@ export const CreateQuestions = () => {
                                 color: '#ffffff',
                                 marginLeft: 30
                             }}
-                            onMouseDown={handleSubmit}
+                            onClick={handleSubmit}
                         >
                             Enregister
                         </Button>
