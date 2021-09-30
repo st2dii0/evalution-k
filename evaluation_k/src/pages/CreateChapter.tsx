@@ -25,7 +25,7 @@ import {
 import { Chapter } from "../models/api/Chapters";
 import { Fields } from "../models/api/Fields";
 import { Levels } from "../models/api/Levels";
-import { string } from "prop-types";
+import { string, number } from "prop-types";
 
 const headerStyles: CSSProperties = {
   display: "flex",
@@ -46,53 +46,69 @@ const defaultChapter: Chapter = {
 };
 
 type ChapterParams = {
-    id: string;
-    field_id: string;
-    level_id: string;
-}
+  id: string;
+  field_id: string;
+  level_id: string;
+};
 
 export const CreateChapter = () => {
   const host = process.env.REACT_APP_BASEURL;
-  const history = useHistory()
-  const { id, field_id, level_id } = useParams<ChapterParams>()
-  const [chapter, setChapter] = useState<Chapter>(defaultChapter);
+  const history = useHistory();
+  const { id, field_id, level_id } = useParams<ChapterParams>();
+  const [chapter, setChapter] = useState<Chapter>(defaultChapter);   
+  const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
 
-    console.log('prevState chapter:', chapter);    
-    
-    let handleSubmit = async () => {
-        
-        {/*TODO: Check why setChapter does follow async rule, update occurs on 2nd try*/}
-        const nId = Number(id)
-        const nField_id = Number(field_id)
-        const nLevel_id = Number(level_id)
-        if(id !== undefined){
-            setChapter({...chapter, chapter_id: nId, field_id: 1, level_id: 1})
-            // setChapter({...chapter, chapter_id: nId, field_id: 1, level_id: 1})
-            console.log('chapter if id :',chapter)
-        } else if (field_id && level_id !== undefined ) {
-            setChapter({...chapter, field_id: nField_id, level_id: nLevel_id});
-            // setChapter({...chapter, field_id: nField_id, level_id: nLevel_id});
-            console.log('chapter if field and level', chapter);
-        }
-        
-        await axios.post(`${host}/v1/chapters/`, 
-            {
-                chapter
-            }
-        )
-        .then((response => {
-            if(response.status === 201) {
-                history.push(`/chapitres/${response.data.id}`)
-            } else if ( response.status === 400 ){
-                console.log('Error 400');
-            }
-        }))
 
-        .catch((err) => {
-            console.log(err);
-        })
-    
+  let handleSubmit = () => {
+    {
+      /*TODO: Check why setChapter does follow async rule, update occurs on 2nd try*/
+    }
+    const nId = Number(id);
+    const nField_id = Number(field_id);
+    const nLevel_id = Number(level_id);
+    console.log("field_id", field_id, "nfield_id", nField_id);
+    console.log("level_id", level_id, "nlevel_id", nLevel_id);
+    if (id !== undefined) {
+      setChapter({
+        ...chapter, 
+        chapter_id: nId, 
+        field_id: 1, 
+        level_id: 1 
+      });
+      setLoading(true)
+      console.log("chapter if id :", chapter);
+    } else if (field_id && level_id !== undefined) {
+      setChapter({
+        ...chapter,
+        field_id: nField_id,
+        level_id: nLevel_id
+      });
+      setLoading(true)
+      console.log("chapter if field and level", chapter);
+    }
   };
+
+  useEffect(() => {
+    console.log('chapter in useEffect', chapter);
+    console.log('status loading : ', loading);
+    
+    if (loading === true) {
+      axios
+        .post(`${host}/v1/chapters/`, {
+          chapter
+        })
+        .then(response => {
+          if (response.status === 201) {
+            history.push(`/chapitres/${response.data.id}`);
+          } else if (response.status === 400) {
+            console.log("Error 400");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [loading]);
 
   return (
     <Container>
@@ -120,10 +136,11 @@ export const CreateChapter = () => {
               style={{
                 width: 100
               }}
+              type="number"
               onChange={value => {
-                  var n = Number(value);
-                  setChapter({...chapter, number: n})
-                  console.log('numéro', n);
+                const n = Number(value);
+                setChapter({ ...chapter, number: n });
+                console.log("numéro", value);
               }}
             />
           </FormGroup>
@@ -134,7 +151,7 @@ export const CreateChapter = () => {
                 width: 200
               }}
               onChange={value => {
-                  setChapter({...chapter, name: value})
+                setChapter({ ...chapter, name: value });
                 // setNameChapter(value);
                 console.log("Name :", value);
               }}
