@@ -60,7 +60,7 @@ export const CreateQuestions = () => {
     const { id } = useParams<{id: string}>()
     const idChapter = Number(id)
     
-    const [ questions, setQuestions] = useState<Question>(defaultQuestion)
+    const [ question, setQuestion] = useState<Question>(defaultQuestion)
     const [ answers_attributes, setAnswers_attributes ] = useState<Answers_Attributes[]>(defaultAnwswer_Attributes)
 
 
@@ -83,7 +83,7 @@ export const CreateQuestions = () => {
     }
 
     const handleSubmit = () => {
-        setQuestions({...questions, answers_attributes})
+        setQuestion({...question, answers_attributes})
         setLoading(true)
 
         console.log('answers_attributes :', answers_attributes);
@@ -91,10 +91,10 @@ export const CreateQuestions = () => {
 
     useEffect(() => {
         if(loading === true) {
-            console.log('Question :', questions);
+            console.log('Question :', question);
 
             axios.post(`${host}/v1/chapters/${idChapter}/questions`, {
-                questions
+                question
             })
             .then(response => {
                 console.log(response);
@@ -141,7 +141,7 @@ export const CreateQuestions = () => {
                             type="number"
                             onChange={value => {
                                 var n = Number(value);
-                                setQuestions({...questions, difficulty: n})
+                                setQuestion({...question, difficulty: n})
                             }}
                         />
                     </FormGroup>
@@ -152,7 +152,7 @@ export const CreateQuestions = () => {
                               width: 600
                             }}
                             onChange={value => {
-                                setQuestions({...questions, text: value})
+                                setQuestion({...question, text: value})
                             }}
                         />
                     </FormGroup>
