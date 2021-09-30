@@ -82,26 +82,30 @@ export const CreateQuestions = () => {
         ]);
     }
 
-    const handleSubmit = async () => {
-        await setQuestions({...questions, answers_attributes})
+    const handleSubmit = () => {
+        setQuestions({...questions, answers_attributes})
         setLoading(true)
-        console.log('Question :', questions);
 
+        console.log('answers_attributes :', answers_attributes);
+    }
+
+    useEffect(() => {
         if(loading === true) {
+            console.log('Question :', questions);
+
             axios.post(`${host}/v1/chapters/${idChapter}/questions`, {
                 questions
             })
             .then(response => {
-                console.log(response);          
+                console.log(response);
+                //TODO: add redirection to current chapter       
             })
             .catch(err => {
                 setError(err)
                 console.log(err);
             })
         }
-
-        console.log('answers_attributes :', answers_attributes);
-    }
+    }, [loading])
 
     return (
 
