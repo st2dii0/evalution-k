@@ -111,11 +111,11 @@ export const ChapterDetails = () => {
         })
     }
 
-    const handleDeleteChapter = (id: number, chapters: Chapter) => {
+    const handleDeleteChapter = (id: number) => {
         axios.delete(`${host}/v1/questions/${id}`)
             .then(response => {
                 if(response.status === 204){
-                    // setChapter(chapters.filter(chapter => chapter.questions[].id !== id))
+                    // setChapter(chapter.filter(chapter => chapter.questions[].id !== id))
                 }
             })
     }
@@ -183,7 +183,8 @@ export const ChapterDetails = () => {
                             >
                                 <p> <b> Nom : </b> { chapter.name} </p>
                                 {/* TODO: Change date format to dd/mm/yyyy */}
-                                <p> <b> Mise à jour : </b>  {chapter.updated_at.toString()}  </p>
+                                {console.log(typeof(chapter.updated_at))}
+                                <p> <b> Mise à jour : </b>  {chapter.updated_at.toString().split(/[- :]/)[2]}/{chapter.updated_at.toString().split(/[- :]/)[1]}/{chapter.updated_at.toString().split(/[- :]/)[0]}  </p>
                             </div>
                             <div
                                 style={{
@@ -242,7 +243,7 @@ export const ChapterDetails = () => {
                     }}
                 >
                     
-                    <h2> Sous-chapitre </h2>
+                    <h2> Sous-chapitres </h2>
                     <Button
                         onClick={() => handleClickNewSubChapter(chapter)}
                         style={buttonStyles} 
