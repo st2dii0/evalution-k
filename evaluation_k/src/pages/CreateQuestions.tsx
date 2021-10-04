@@ -98,7 +98,11 @@ export const CreateQuestions = () => {
             })
             .then(response => {
                 console.log(response);
-                //TODO: add redirection to current chapter       
+                if (response.status === 201) {
+                    history.push(`/chapitres/${idChapter}`);
+                }else if (response.status === 400) {
+                    console.log("Error 400");
+                }
             })
             .catch(err => {
                 setError(err)
