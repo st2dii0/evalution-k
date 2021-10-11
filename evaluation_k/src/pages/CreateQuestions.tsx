@@ -5,14 +5,8 @@ import {
     Button,
     Form,
     FormGroup,
-    FormControl,
-    InputPicker,
     ControlLabel,
-    HelpBlock,
-    ButtonToolbar,
     Input,
-    SelectPicker,
-    InputNumber,
     IconButton,
     Icon,
     Checkbox
@@ -64,8 +58,7 @@ export const CreateQuestions = () => {
     const [ answers_attributes, setAnswers_attributes ] = useState<Answers_Attributes[]>(defaultAnwswer_Attributes)
 
 
-    let addNewQuestionAttributes = () => {
-        console.log("AddNewQuestionAttributes")
+    const addNewQuestionAttributes = () => {
         setAnswers_attributes([...answers_attributes, {
             text: "",
             correct: false
@@ -85,7 +78,6 @@ export const CreateQuestions = () => {
     const handleSubmit = () => {
         setQuestion({...question, answers_attributes})
         setLoading(true)
-
         console.log('answers_attributes :', answers_attributes);
     }
 
