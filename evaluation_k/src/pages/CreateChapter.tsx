@@ -20,7 +20,7 @@ import {
   ButtonToolbar,
   Input,
   SelectPicker,
-  InputNumber
+  Header
 } from "rsuite";
 import { Chapter } from "../models/api/Chapters";
 import { Fields } from "../models/api/Fields";
@@ -56,7 +56,7 @@ export const CreateChapter = () => {
   const history = useHistory();
   const { id, field_id, level_id } = useParams<ChapterParams>();
   const [chapter, setChapter] = useState<Chapter>(defaultChapter);   
-  const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
+  const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
 
 
   let handleSubmit = () => {
@@ -75,7 +75,7 @@ export const CreateChapter = () => {
         field_id: 1, 
         level_id: 1 
       });
-      setLoading(true)
+      setLoading(false)
       console.log("chapter if id :", chapter);
     } else if (field_id && level_id !== undefined) {
       setChapter({
@@ -83,7 +83,7 @@ export const CreateChapter = () => {
         field_id: nField_id,
         level_id: nLevel_id
       });
-      setLoading(true)
+      setLoading(false)
       console.log("chapter if field and level", chapter);
     }
   };
@@ -92,7 +92,7 @@ export const CreateChapter = () => {
     console.log('chapter in useEffect', chapter);
     console.log('status loading : ', loading);
     
-    if (loading === true) {
+    if (loading === false) {
       axios
         .post(`${host}/v1/chapters/`, {
           chapter
@@ -112,6 +112,17 @@ export const CreateChapter = () => {
 
   return (
     <Container>
+      <Header>
+        <img
+          src={require("../assets/mymentor.jpeg").default}
+          alt="mymentor"
+          style={{
+            maxWidth: 200,
+            width: 150,
+            marginLeft: 10
+          }}
+        />
+      </Header>
       <Content style={headerStyles}>
         <h1> Créer un nouveau chapitre </h1>
       </Content>
