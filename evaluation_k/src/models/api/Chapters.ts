@@ -1,3 +1,5 @@
+import { Question, Answers_Attributes } from './Question';
+
 export interface Chapter {
         id: number
         field_id: number
@@ -7,16 +9,7 @@ export interface Chapter {
         number?: number
         created_at: Date
         updated_at: Date
-        questions?: [
-                {
-                     id: number
-                     chapter_id: number
-                     text: string
-                     difficulty: number
-                     created_at: Date
-                     updated_at: Date
-                }
-        ],
+        questions?: Question[]
         chapters?: [
                 {
                         id: number
