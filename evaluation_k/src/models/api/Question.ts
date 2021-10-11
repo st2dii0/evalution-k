@@ -8,7 +8,8 @@ export interface Question {
     chapter_id?: number
     text: string
     difficulty?: number
-    answers_attributes: Answers_Attributes[]
+    answers?: Answers_Attributes[]
+    answers_attributes?: Answers_Attributes[]
     created_at?: Date
     updated_at?: Date
 }
