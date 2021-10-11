@@ -48,8 +48,8 @@ export const Chapters = () => {
     const [{ user }] = UserGlobalState()
     const history = useHistory()
     const host = process.env.REACT_APP_BASEURL
-    const [ chapters, setChapters ]: [Chapter[], (chapters: Chapter[]) => void] = useState(defaultChapter)
-    const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(true)
+    const [ chapters, setChapters ]: [Chapter[], (chapters: Chapter[]) => void ] = useState(defaultChapter)
+    const [loading, setLoading]: [boolean, (loading: boolean) => void] = useState<boolean>(false)
     const [error, setError]: [string, (error: string) => void] = useState("")
 
     const handleClickNewchapter = () => {
@@ -61,17 +61,17 @@ export const Chapters = () => {
 
     useEffect( () => {
         axios.get<Chapter[]>(`${host}/v1/chapters/`, {
-            headers:{
+            headers: {
                 "Content-Type": "application/json"
             }
         })
             .then(response => {
                 setChapters(response.data)
-                setLoading(false)
+                setLoading(true)
             })
             .catch(err => {
                 setError(err)
-                setLoading(false)
+                setLoading(true)
             })
     }, [])
 
