@@ -9,7 +9,8 @@ import {
     Input,
     IconButton,
     Icon,
-    Checkbox
+    Checkbox,
+    Header
 } from 'rsuite'
 import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
@@ -106,6 +107,17 @@ export const CreateQuestions = () => {
     return (
 
         <Container>
+            <Header>
+                <img
+                    src={require("../assets/mymentor.jpeg").default}
+                    alt="mymentor"
+                    style={{
+                      maxWidth: 200,
+                      width: 150,
+                      marginLeft: 10
+                    }}
+             />
+        </Header>
             <Content
                 style={headerStyles}
             >
