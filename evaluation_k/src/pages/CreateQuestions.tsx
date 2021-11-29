@@ -32,6 +32,7 @@ const defaultQuestion: Question = {
     "difficulty": null,
     "answers_attributes": [
         {
+            "id": null,
             "correct": null,
             "text": null
         }
@@ -41,6 +42,7 @@ const defaultQuestion: Question = {
 
 const defaultAnwswer_Attributes: Answers_Attributes[] = [
     {
+        "id": null,
         'text': null,
         'correct': false
     }
@@ -61,6 +63,7 @@ export const CreateQuestions = () => {
 
     const addNewQuestionAttributes = () => {
         setAnswers_attributes([...answers_attributes, {
+            id: null,
             text: "",
             correct: false
         }])
