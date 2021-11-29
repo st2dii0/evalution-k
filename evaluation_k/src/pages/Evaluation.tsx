@@ -1,12 +1,13 @@
-import React, { CSSProperties, useState, useEffect } from "react";
-import { UserGlobalState } from "../core/user";
-import { useHistory } from "react-router-dom";
-import { Container, Content, Panel, Header, Radio, Button } from "rsuite";
-import axios from "axios";
+import React, { CSSProperties, useState, useEffect } from "react"
+import { UserGlobalState } from "../core/user"
+import { useHistory } from "react-router-dom"
+import { Container, Content, Panel, Header, Radio, Button } from "rsuite"
+import axios from "axios"
 
-import { Chapter } from "../models/api/Chapters";
-import { Question, Answers_Attributes } from "../models/api/Question";
-import usePagination from "../components/questions/Pagination";
+import { Chapter } from "../models/api/Chapters"
+import { Question, Answers_Attributes } from "../models/api/Question"
+import usePagination from "../components/questions/Pagination"
+import  { QuestionPerChapter }  from "../components/questions/QuestionPerChapter"
 
 const headerStyles: CSSProperties = {
   display: "flex",
@@ -18,31 +19,28 @@ const headerStyles: CSSProperties = {
   justifyContent: "center",
   backgroundColor: "#1E303E",
   color: "#ffffff"
-};
+}
 const bodyStyles: CSSProperties = {
   display: "flex",
   marginLeft: 30,
   flexDirection: "column",
   alignItems: "center"
-};
+}
 
-const defaultChapter: Chapter[] = [];
+const defaultChapter: Chapter[] = []
 
 export const Evaluation = () => {
   // const [{ user }] = UserGlobalState()
-  const history = useHistory();
-  const host = process.env.REACT_APP_BASEURL;
-  const [activePage, setActivePage] = useState(1);
+  const history = useHistory()
+  const host = process.env.REACT_APP_BASEURL
   const [chapters, setChapters]: [
     Chapter[],
     (chapters: Chapter[]) => void
-  ] = useState(defaultChapter);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-  const [countChapters, setCountChapters] = useState(0);
-  {
-    /* @ts-ignore */
-  }
+  ] = useState(defaultChapter)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [countChapters, setCountChapters] = useState(0)
+
   const {
     firstContentIndex,
     lastContentIndex,
@@ -54,7 +52,7 @@ export const Evaluation = () => {
   } = usePagination({
     contentPerPage: 1,
     count: chapters.length
-  });
+  })
 
   const fetchChapter = () => {
     axios
@@ -64,21 +62,21 @@ export const Evaluation = () => {
         }
       })
       .then(response => {
-        setChapters(response.data);
-        setCountChapters(response.data.length);
-        console.log("chapters: ", chapters);
-        setLoading(false);
-        console.log("chapterCount: ", countChapters);
+        setChapters(response.data)
+        setCountChapters(response.data.length)
+        console.log("chapters: ", chapters)
+        setLoading(false)
+        console.log("chapterCount: ", countChapters)
       })
       .catch(err => {
-        console.log(err);
-        setError(true);
-      });
-  };
+        console.log(err)
+        setError(true)
+      })
+  }
 
   useEffect(() => {
-    fetchChapter();
-  }, [loading]);
+    fetchChapter()
+  }, [loading])
 
   return (
     <Container>
@@ -99,22 +97,6 @@ export const Evaluation = () => {
         </Panel>
       </Content>
       <Content style={bodyStyles}>
-        {/* {chapters.map((chapter, idx) => (
-            <div
-                key={idx}
-            >
-                <h3> {chapter.name} </h3>
-        
-
-        <Button
-            appearance='primary'
-        >
-            Valider
-        </Button>
-
-        </div>
-        ))} */}
-
         {loading ? (
           <h2>Loading...</h2>
         ) : error ? (
@@ -149,40 +131,11 @@ export const Evaluation = () => {
               {chapters
                 .slice(firstContentIndex, lastContentIndex)
                 .map((chapter: Chapter) => (
+                  // create a component EvalChapter
                   <div key={chapter.id}>
                     <div>
                       <h3>{chapter.name}</h3>
-                      {chapter.questions !== undefined ? (
-                        chapter.questions
-                        // .slice(firstContentIndex, lastContentIndex)
-                        .map((question: Question, idx) => (
-                          <div key={idx}>
-                            <h4>{question.text}</h4>
-                            {console.log("Question: ", question)}
-                            {question !== undefined ? (
-                              question.answers
-                              .map((anwser, index) => (
-                                <div key={index}>
-                                  <Radio> {anwser.text} </Radio>
-                                </div>
-                              ))
-                              ) : (
-                                <> </>
-                                )}
-                                {/* <div>
-                                    <Button
-                                        onClick={()=>{
-                                            
-                                        }}
-                                    > 
-                                        Enregister 
-                                    </Button>
-                                </div> */}
-                          </div>
-                        ))
-                      ) : (
-                        <> </>
-                      )}
+                      <QuestionPerChapter chapter={chapter} />
                     </div>
                   </div>
                 ))}
@@ -191,5 +144,5 @@ export const Evaluation = () => {
         )}
       </Content>
     </Container>
-  );
-};
+  )
+}
