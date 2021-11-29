@@ -1,10 +1,11 @@
 export interface Answers_Attributes {
+    id: number
     correct: boolean
     text: string
 }
 
 export interface Question {
-    id: string
+    id: number
     chapter_id?: number
     text: string
     difficulty?: number
