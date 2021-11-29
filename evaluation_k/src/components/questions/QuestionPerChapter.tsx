@@ -52,9 +52,10 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
       <div className="questions">
         {chapter.questions !== undefined ? (
           chapter.questions
-            // .slice(0, 1)
+            .slice(firstContentIndex, lastContentIndex)
             .map((question: Question, idx) => (
               <div key={idx}>
+                {/* Display Questions 1 by 1   */}
                 <h4>{question.text}</h4>
                 {console.log("Question: ", question)}
                 {question !== undefined ? (
