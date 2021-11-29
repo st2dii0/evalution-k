@@ -7,9 +7,11 @@ import usePagination from "./Pagination";
 
 type ChapterProps = {
     chapter: Chapter
+    previousChapter: () => void
+    nextChapter: () => void
 }
 
-export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapter}) => {
+export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapter, nextChapter, previousChapter}) => {
   const {
     firstContentIndex,
     lastContentIndex,
@@ -27,7 +29,7 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
     <div>
       <div className="paginationEval">
         <button
-          onClick={prevPage}
+          onClick={page === 1 ? previousChapter : prevPage}
           className={`pageEval ${page === 1 && "disabled"}`}
         >
           &larr;
@@ -43,7 +45,7 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
           </button>
         ))}
         <button
-          onClick={nextPage}
+          onClick={page === totalPages ? nextChapter : nextPage}
           className={`pageEval ${page === totalPages && "disabled"}`}
         >
           &rarr;

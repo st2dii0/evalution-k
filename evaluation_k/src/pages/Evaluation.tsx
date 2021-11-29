@@ -135,7 +135,7 @@ export const Evaluation = () => {
                   <div key={chapter.id}>
                     <div>
                       <h3>{chapter.name}</h3>
-                      <QuestionPerChapter chapter={chapter} />
+                      <QuestionPerChapter chapter={chapter} previousChapter={prevPage}  nextChapter={nextPage} />
                     </div>
                   </div>
                 ))}
