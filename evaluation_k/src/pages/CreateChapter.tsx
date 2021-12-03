@@ -60,14 +60,12 @@ export const CreateChapter = () => {
 
 
   let handleSubmit = () => {
-    {
-      /*TODO: Check why setChapter does follow async rule, update occurs on 2nd try*/
-    }
+    
     const nId = Number(id);
     const nField_id = Number(field_id);
     const nLevel_id = Number(level_id);
-    console.log("field_id", field_id, "nfield_id", nField_id);
-    console.log("level_id", level_id, "nlevel_id", nLevel_id);
+    // console.log("field_id", field_id, "nfield_id", nField_id);
+    // console.log("level_id", level_id, "nlevel_id", nLevel_id);
     if (id !== undefined) {
       setChapter({
         ...chapter, 
