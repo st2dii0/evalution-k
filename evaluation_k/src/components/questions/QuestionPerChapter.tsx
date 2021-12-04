@@ -43,8 +43,22 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
     });
 
   return (
-    <div>
-      <div className="paginationEval">
+    <div
+      style={{
+        marginLeft: "16.6%",
+        width: "66.6%"
+      }}
+    >
+      <div 
+        className="paginationEval"
+        style={
+          {
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+          }
+        }
+      >
         <button
           onClick={page === 1 ? previousChapter : prevPage}
           className={`pageEval ${page === 1 && "disabled"}`}
@@ -57,7 +71,9 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
             onClick={() => setPage(el + 1)}
             key={el}
             className={`pageEval ${page === el + 1 ? "active" : ""}`}
-            // {... console.log('Active page',page)}
+            style={{
+              
+            }}
           >
             {el + 1}
           </button>
@@ -74,13 +90,33 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
           chapter.questions
             .slice(firstContentIndex, lastContentIndex)
             .map((question: Question, idx) => (
-              <div key={idx}>
+              <div 
+                key={idx}
+                style={{
+                  listStyleType: "none",
+                 
+                }}
+              >
                 {/* Display Questions 1 by 1 */}
-                <h4>{question.text}</h4>
-                {/* {console.log("Question: ", question)} */}
+                <h4
+                  style={{
+                    display: "flex",
+                    margin: "40px 0",
+                    fontSize: "24px",
+                    color: "#2D3339",
+                    justifyContent: "center",
+                  }}
+                >{question.text}</h4>
                   {question !== undefined ? (
                     question.answers.map((answer) => (
                       <Radio
+                        style={{
+                          padding: "15px",
+                          marginBottom: 20,
+                          border: "1px solid #E9E9E9",
+                          borderRadius: "4px 4px 4px 4px",
+                          fontSize: 18
+                        }}
                         key={answer.id}
                         value={`value-${answer.id}`}
                         onChange={() => saveAnswer(question.id , answer.id)}
@@ -92,8 +128,24 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
                     ) : (
                       <> </>
                       )}
-                <div>
-                  <Button 
+                <div style={{
+                  display: 'flex',
+                  width: "100%",
+                  marginTop: 20,
+                  justifyContent: "center",
+                  alignItems: 'stretch',
+                }}>
+                  <Button
+                    style={{
+                      color: '#FFFFFF',
+                      backgroundColor: '#007bff',
+                      justifyContent: "end",
+                      position: "relative",
+                      display: "inline-block",
+                      width: "100%",
+                      fontSize: 18,
+                      marginBottom: 30
+                    }}
                     onClick={page === totalPages ? nextChapter : nextPage}
                     className={`pageEval ${page === totalPages && "disabled"}`}
                   >Enregister</Button>

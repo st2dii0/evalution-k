@@ -6,15 +6,12 @@ import axios from "axios";
 
 import { Evaluation as typeEvaluation } from "../models/api/Evaluation"
 import { Chapter } from "../models/api/Chapters";
-import { Question, Answers_Attributes } from "../models/api/Question";
 import usePagination from "../components/questions/Pagination";
 import { QuestionPerChapter } from "../components/questions/QuestionPerChapter";
 
 const headerStyles: CSSProperties = {
   display: "flex",
-  marginBottom: 50,
   margin: "0 0 30px 0",
-  padding: "20px 0",
   textAlign: "center",
   alignContent: "center",
   justifyContent: "center",
@@ -25,7 +22,10 @@ const bodyStyles: CSSProperties = {
   display: "flex",
   marginLeft: 30,
   flexDirection: "column",
-  alignItems: "center"
+  alignItems: "center",
+  backgroundColor: "#fff",
+  justifyContent: "space-between",
+  borderRadius: "4px 4px 4px 4px"
 };
 
 export interface localChoices {
@@ -181,7 +181,7 @@ export const Evaluation = () => {
     console.log("Evaluation :", evaluation);
     // call api
     if (evaluation.student_name !== null) {
-      console.log(evaluation)
+      console.log("data to send: ", evaluation)
       axios
         .post(`${host}/v1/field/1/level/1/evaluations/new`, {
           evaluation
@@ -221,7 +221,13 @@ export const Evaluation = () => {
           <h2>Error fetching data</h2>
         ) : (
           <>
-            <div className="pagination">
+            <div 
+              className="pagination"
+              style={{
+                display: "flex",
+                flexDirection: "row"
+              }}
+            >
               <button
                 onClick={prevPage}
                 className={`page ${page === 1 && "disabled"}`}
@@ -246,13 +252,22 @@ export const Evaluation = () => {
               </button>
             </div>
             
-            <div className="items">
+            <div className="items" style={{width: "100%"}}>
               {chapters
                 .slice(firstContentIndex, lastContentIndex)
                 .map((chapter: Chapter) => (
                   <div key={chapter.id}>
                     <div>
-                      <h3>{chapter.name}</h3>
+                      <h3
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "center",
+                          fontSize: "26px",
+                          color: "#2D3339",
+                          cursor: "default",
+                        }}
+                      >{chapter.name}</h3>
                       <QuestionPerChapter
                         chapter={chapter}
                         previousChapter={prevPage}
@@ -268,10 +283,27 @@ export const Evaluation = () => {
           </>
         )}
         <div className="modal-container">
-
-              <Modal show={openModal} backdrop="static" onClose={handleClose} keyboard={false}>
+              <Modal 
+                // show={openModal}
+                show={false}
+                backdrop="static" 
+                onClose={handleClose} 
+                keyboard={false}
+                style={{
+                  fontSize: "20px",
+                  color: "#2D3339",
+                  marginTop: 15
+                }}
+              >
               <Modal.Header>
-                  <Modal.Title> Nouvelle évaluation </Modal.Title> 
+                  <Modal.Title
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      color: "#2D3339",
+
+                    }}
+                  > Nouvelle évaluation </Modal.Title> 
                 </Modal.Header>
                 <Modal.Body>
                   <p> Comment t'appelles-tu ? </p>
