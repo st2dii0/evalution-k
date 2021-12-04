@@ -62,6 +62,13 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
         <button
           onClick={page === 1 ? previousChapter : prevPage}
           className={`pageEval ${page === 1 && "disabled"}`}
+          style={{
+            margin: 1, 
+            border: "1px solid #E9E9E9",
+            borderRadius: "4px 4px 4px 4px",
+            fontSize: 16,
+            color: "#000000"
+          }}
         >
           &larr;
         </button>
@@ -72,7 +79,12 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
             key={el}
             className={`pageEval ${page === el + 1 ? "active" : ""}`}
             style={{
-              
+              width: `${100 / totalPages}%`, 
+              margin: 1,
+              border: "1px solid #E9E9E9",
+              borderRadius: "4px 4px 4px 4px",
+              fontSize: 14, 
+              backgroundColor: `${localChoices.find(obj => obj.question_id === chapter.questions[el].id) !== undefined ? "#28a745" : "#ffc107"}`
             }}
           >
             {el + 1}
@@ -81,6 +93,13 @@ export const QuestionPerChapter: React.FunctionComponent<ChapterProps> = ({chapt
         <button
           onClick={page === totalPages ? nextChapter : nextPage}
           className={`pageEval ${page === totalPages && "disabled"}`}
+          style={{
+            margin: 1, 
+            border: "1px solid #E9E9E9",
+            borderRadius: "4px 4px 4px 4px",
+            fontSize: 16,
+            color: "#000000"
+          }}
         >
           &rarr;
         </button>
