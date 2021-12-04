@@ -3,7 +3,7 @@ import { UserGlobalState } from "../core/user";
 import { useHistory, Link, useParams } from "react-router-dom";
 
 import axios from "axios";
-import { Container, Content, Button, Icon, IconButton, Header } from "rsuite";
+import { Container, Content, Button, Icon, IconButton, Header, Modal, Input } from "rsuite";
 
 import { Chapter } from "../models/api/Chapters";
 
