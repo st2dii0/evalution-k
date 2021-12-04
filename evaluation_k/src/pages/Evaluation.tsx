@@ -231,6 +231,12 @@ export const Evaluation = () => {
               <button
                 onClick={prevPage}
                 className={`page ${page === 1 && "disabled"}`}
+                style={{
+                  margin: 1,
+                  border: "1px solid #E9E9E9",
+                  borderRadius: "4px 4px 4px 4px",
+                  fontSize: 14
+                }}
               >
                 &larr;
               </button>
@@ -240,6 +246,12 @@ export const Evaluation = () => {
                   onClick={() => setPage(el + 1)}
                   key={el}
                   className={`page ${page === el + 1 ? "active" : ""}`}
+                  style={{
+                    margin: 1,
+                    border: "1px solid #E9E9E9",
+                    borderRadius: "4px 4px 4px 4px",
+                    fontSize: 14
+                  }}
                 >
                   {el + 1}
                 </button>
@@ -247,6 +259,12 @@ export const Evaluation = () => {
               <button
                 onClick={nextChapter}
                 className={`page ${page === totalPages && "disabled"}`}
+                style={{
+                  margin: 1,
+                  border: "1px solid #E9E9E9",
+                  borderRadius: "4px 4px 4px 4px",
+                  fontSize: 14
+                }}
               >
                 &rarr;
               </button>
