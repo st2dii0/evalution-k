@@ -1,8 +1,7 @@
 import React, {
   useState,
   CSSProperties,
-  useEffect,
-  FunctionComponent
+  useEffect
 } from "react";
 import { UserGlobalState } from "../core/user";
 import { useHistory, useLocation, useParams } from "react-router-dom";
@@ -13,19 +12,11 @@ import {
   Button,
   Form,
   FormGroup,
-  FormControl,
-  InputPicker,
   ControlLabel,
-  HelpBlock,
-  ButtonToolbar,
   Input,
-  SelectPicker,
   Header
 } from "rsuite";
 import { Chapter } from "../models/api/Chapters";
-import { Fields } from "../models/api/Fields";
-import { Levels } from "../models/api/Levels";
-import { string, number } from "prop-types";
 
 const headerStyles: CSSProperties = {
   display: "flex",
@@ -86,10 +77,7 @@ export const CreateChapter = () => {
     }
   };
 
-  useEffect(() => {
-    console.log('chapter in useEffect', chapter);
-    console.log('status loading : ', loading);
-    
+  useEffect(() => {    
     if (loading === false) {
       axios
         .post(`${host}/v1/chapters/`, {
