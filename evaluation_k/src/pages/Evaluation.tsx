@@ -8,6 +8,7 @@ import { Evaluation as typeEvaluation } from "../models/api/Evaluation"
 import { Chapter } from "../models/api/Chapters";
 import usePagination from "../components/questions/Pagination";
 import { QuestionPerChapter } from "../components/questions/QuestionPerChapter";
+import { Question } from '../models/api/Question';
 
 const headerStyles: CSSProperties = {
   display: "flex",
@@ -76,10 +77,9 @@ export const Evaluation = () => {
   const [error, setError] = useState(false)
   const [studentName, setStudentName] = useState("")
   const [countChapters, setCountChapters] = useState(0)
-  const [choiceAttributes, setChoiceAttributes] = useState()
   const [localChoices, setLocalChoices] = useState<localChoices[]>(choicesDefaults)
   const [evaluation, setEvaluation] = useState<typeEvaluation>(evaluationDefault)
-  const [openModal, setOpenModal] = useState(true);
+  const [openModal, setOpenModal] = useState(true)
 
   const {
     firstContentIndex,
@@ -179,8 +179,12 @@ export const Evaluation = () => {
 
   useEffect(() => {
     console.log("Evaluation :", evaluation);
-    // call api
-    if (evaluation.student_name !== null) {
+    // post api
+    let countQuestions: number = 0
+chapters.forEach((elem) => { countQuestions += elem.questions.length })
+    console.log("countQuestions : ", countQuestions);
+    
+    if (evaluation.student_name !== null && evaluation.choices_attributes.length === countQuestions ) {
       console.log("data to send: ", evaluation)
       axios
         .post(`${host}/v1/field/1/level/1/evaluations/new`, {
@@ -253,7 +257,8 @@ export const Evaluation = () => {
                     fontSize: 14
                   }}
                 >
-                  {el + 1}
+                  {chapters[el].name}
+                  {/* {el + 1} */}
                 </button>
               ))}
               <button
