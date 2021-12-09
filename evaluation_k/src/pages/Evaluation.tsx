@@ -307,8 +307,8 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
         )}
         <div className="modal-container">
               <Modal 
-                // show={openModal}
-                show={false}
+                show={openModal}
+                // show={false}
                 backdrop="static" 
                 onClose={handleClose} 
                 keyboard={false}
