@@ -104,7 +104,6 @@ export const Evaluation = () => {
       .then(response => {
         setChapters(response.data)
         setCountChapters(response.data.length)
-        // console.log("chapters: ", chapters)
         setLoading(false)
       })
       .catch(err => {
@@ -143,8 +142,7 @@ export const Evaluation = () => {
 
     setEvaluation({...evaluation, 
       student_name: studentName,
-      school_id: 123456,
-      user_id: 789,
+      user_id: 1,
       choices_attributes: choicesAttributes
     })
     setLoading(false)
@@ -187,7 +185,10 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
     if (evaluation.student_name !== null && evaluation.choices_attributes.length === countQuestions ) {
       console.log("data to send: ", evaluation)
       axios
-        .post(`${host}/v1/field/1/level/1/evaluations/new`, {
+        .post(`${host}/v1/evaluations`,{
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        },
           evaluation
         })
         .then(response => {
