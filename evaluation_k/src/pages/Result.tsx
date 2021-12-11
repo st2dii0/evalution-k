@@ -7,7 +7,6 @@ import axios from "axios"
 import { Result as ResultType } from '../models/api/Result'
 import { Chapter } from '../models/api/Chapters';
 import { Question } from '../models/api/Question';
-import { check } from "prettier";
 
 const headerStyles: CSSProperties = {
     display: "flex",
@@ -34,7 +33,8 @@ export interface evaluationResultType {
     chapterName: string
     totalQuestions: number
     goodAnswers: number
-    
+    comment: string
+    color: string
 }
 
 const defaultEvalResult: evaluationResultType[] = [
@@ -43,8 +43,11 @@ const defaultEvalResult: evaluationResultType[] = [
         chapterName: null,
         totalQuestions: null,
         goodAnswers: null,
+        comment : null,
+        color: null
     }
 ]
+
 
 export const Result = () => {
     const history = useHistory();
@@ -84,29 +87,40 @@ export const Result = () => {
         console.log('Result :', result)
         if (result !== undefined) {
 
+            let tempEvalResult: evaluationResultType[] = []
+
             result.choices.forEach(element => {
-                let index = evalResult.findIndex(obj => obj.chapter_id === element.answer.question.chapter_id)
+                let index = tempEvalResult.findIndex(obj => obj.chapter_id === element.answer.question.chapter_id)
                 if (index === -1) {
-                    // on crée un chapitre dans evalResult
-                    let goodAnswer: number = 0;
-                    if (element.answer.correct == true) {
+                    // new chapter evalResult
+                    let goodAnswer: number = 0
+                    if (element.answer.correct === true) {
                         goodAnswer = 1
                     }
-                    setEvalResult([... evalResult, { chapter_id: element.answer.question.chapter_id, chapterName: element.answer.question.chapter.name , totalQuestions : 1, goodAnswers : goodAnswer}])
+                    tempEvalResult.push({chapter_id: element.answer.question.chapter_id, chapterName: element.answer.question.chapter.name , totalQuestions : 1, goodAnswers : goodAnswer, comment: null, color: null})
+
                 } else {
-                    // on update le chapitre dans evalResult
-                
-                    let tempChapter = evalResult[index];
-                    tempChapter.totalQuestions ++;
-                    element.answer.correct == true ? tempChapter.goodAnswers += 1 : tempChapter.goodAnswers
-    
-                    setEvalResult([
-                        ...evalResult.slice(0, index),
-                        tempChapter,
-                        ...evalResult.slice(index + 1)
-                    ])
+                    // update chapter in evalResult
+                    tempEvalResult[index].totalQuestions ++;
+                    tempEvalResult[index].goodAnswers += element.answer.correct === true ? 1 : 0
+                    
                 }
             });
+            tempEvalResult.forEach(elem => {
+                let grades = elem.goodAnswers / elem.totalQuestions
+               
+                if (grades >= 0.8) {
+                    elem.comment = "Maitrisé 🏆"
+                    elem.color = "green"
+                } else if (grades >= 0.65) {
+                    elem.comment = "À consolider 💪"
+                    elem.color = "yellow"
+                } else {
+                    elem.comment = "À revoir 📖"
+                    elem.color = "red"
+                }
+            })
+            setEvalResult(tempEvalResult)
         }
     }, [result])
 
@@ -140,11 +154,31 @@ export const Result = () => {
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
                 </div>
-                {evalResult.map( (res, idx) => (
-                    <div key={idx}>
-                        
-                    </div>
-                ))}
+                <div>
+                    {evalResult.map( (result, idx) => (
+                        // if resutl.comment ===  1 -> la div du bien joué
+                        <div 
+                            key={idx}
+                            style={{
+                                padding: "15px",
+                                marginBottom: 20,
+                                border: "1px solid #E9E9E9",
+                                borderRadius: "4px 4px 4px 4px",
+                                fontSize: 18
+                            }}
+                        >
+                            {result.chapterName} <p style={{
+                                color: `${result.color}`
+                            }}
+                            > {result.comment} - {result.goodAnswers}/{result.totalQuestions}</p> 
+                        </div>
+                    ))}
+
+                    <Button
+                        appearance='primary'
+                        onClick={() => history.push(`/evaluation`)}
+                    > Refaire le Teste </Button>
+                </div>
             </Content>
         </Container>
     )
