@@ -130,8 +130,6 @@ export const Evaluation = () => {
   }
 
   const hanldeSubmit = async () => {
-    // set localChoices to evaluation {} then post
-
     let choicesAttributes: choices = [{answer_id: null}]
     await localChoices.forEach(element => {
       if (element.answer_id !== null) {
@@ -179,7 +177,7 @@ export const Evaluation = () => {
     console.log("Evaluation :", evaluation);
     // post api
     let countQuestions: number = 0
-chapters.forEach((elem) => { countQuestions += elem.questions.length })
+    chapters.forEach((elem) => { countQuestions += elem.questions.length })
     console.log("countQuestions : ", countQuestions);
     
     if (evaluation.student_name !== null && evaluation.choices_attributes.length === countQuestions ) {
@@ -192,6 +190,14 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
           evaluation
         })
         .then(response => {
+          if(response.status === 201){
+            //Redirect to résultat
+            const id: number =  response.data.id
+            console.log("id Evaluation:", id);            
+            history.push(`/resultat/${id}`)
+          } else if (response.status === 400) {
+            console.log("Error 400");
+          }
           console.log(response);
         })
         .catch(err => {
