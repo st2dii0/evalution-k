@@ -232,14 +232,15 @@ export const Evaluation = () => {
           <h2>Error fetching data</h2>
         ) : (
           <>
-            <div 
+            
+            {/* <div 
               className="pagination"
               style={{
                 display: "flex",
                 flexDirection: "row"
               }}
-            >
-              <button
+            > */}
+              {/* <button
                 onClick={prevPage}
                 className={`page ${page === 1 && "disabled"}`}
                 style={{
@@ -250,8 +251,8 @@ export const Evaluation = () => {
                 }}
               >
                 &larr;
-              </button>
-              {/* @ts-ignore */}
+              </button> */}
+              {/* @ts-ignore
               {[...Array(totalPages).keys()].map(el => (
                 <button
                   onClick={() => setPage(el + 1)}
@@ -266,9 +267,9 @@ export const Evaluation = () => {
                 >
                   {chapters[el].name}
                   {/* {el + 1} */}
-                </button>
-              ))}
-              <button
+                {/* </button> */}
+              {/* ))} */}
+              {/* <button
                 onClick={nextChapter}
                 className={`page ${page === totalPages && "disabled"}`}
                 style={{
@@ -279,9 +280,9 @@ export const Evaluation = () => {
                 }}
               >
                 &rarr;
-              </button>
-            </div>
-            
+              </button> */}
+            {/* </div>
+             */}
             <div className="items" style={{width: "100%"}}>
               {chapters
                 .slice(firstContentIndex, lastContentIndex)
@@ -338,7 +339,7 @@ export const Evaluation = () => {
                 <Modal.Body>
                   <p> Comment t'appelles-tu ? </p>
                   <Input 
-                    placeholder="Nom Prénom"
+                    placeholder="Prénom"
                     type="string"
                     onChange={(value) => setStudentName(value)}
                   />
