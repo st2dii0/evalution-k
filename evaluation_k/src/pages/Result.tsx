@@ -38,6 +38,7 @@ export interface evaluationResultType {
 }
 
 const defaultEvalResult: evaluationResultType[] = [
+    // TODO: ADD chapter number (number ? ) to index list of chapter
     {
         chapter_id: null,
         chapterName: null,
@@ -154,9 +155,13 @@ export const Result = () => {
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
                 </div>
-                <div>
+                <div
+                    style={{
+                        listStyleType: "none",
+                        marginTop: 20   
+                    }}
+                >
                     {evalResult.map( (result, idx) => (
-                        // if resutl.comment ===  1 -> la div du bien joué
                         <div 
                             key={idx}
                             style={{
