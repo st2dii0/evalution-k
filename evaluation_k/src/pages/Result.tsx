@@ -114,10 +114,10 @@ export const Result = () => {
                     elem.color = "green"
                 } else if (grades >= 0.65) {
                     elem.comment = "À consolider 💪"
-                    elem.color = "yellow"
+                    elem.color = "#FFB800"
                 } else {
                     elem.comment = "À revoir 📖"
-                    elem.color = "red"
+                    elem.color = "#FF2E00"
                 }
             })
             setEvalResult(tempEvalResult)
