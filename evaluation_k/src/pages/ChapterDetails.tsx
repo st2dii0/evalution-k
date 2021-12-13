@@ -6,7 +6,7 @@ import axios from "axios";
 import { Container, Content, Button, Icon, IconButton, Header } from "rsuite";
 
 import { Chapter } from "../models/api/Chapters";
-import { Question } from "../models/api/Question";
+import { Question } from '../models/api/Question';
 
 require("dotenv").config();
 
@@ -91,14 +91,13 @@ export const ChapterDetails = () => {
   const { id } = useParams<{ id: string }>();
   const host = process.env.REACT_APP_BASEURL;
   const [chapter, setChapter] = useState<Chapter>(defaultChapter);
-  const [question, setQuestion] = useState();
+  const [question, setQuestion] = useState<Question[]>();
   const [loading, setLoading]: [
     boolean,
     (loading: boolean) => void
   ] = React.useState<boolean>(true);
-  const [error, setError]: [string, (error: string) => void] = React.useState(
-    ""
-  );
+  const [error, setError] = React.useState(false)
+
 
   const handleClickNewSubChapter = (chapter: Chapter) => {
     history.push({
@@ -112,13 +111,39 @@ export const ChapterDetails = () => {
     });
   };
 
-  const handleDeleteChapter = (id: number) => {
-    axios.delete(`${host}/v1/questions/${id}`).then(response => {
+  // Handle delete question
+  //TODO: Change question list to remove 
+  const handleDeleteQuestion = (id: number) => {
+    console.log(`Delete question  ${id}`)
+    
+    axios.delete(`${host}/v1/questions/${id}`)
+    .then(response => {
       if (response.status === 204) {
-        setChapter(chapter);
+        if(question !== undefined){
+          setQuestion(question.filter(question => question.id !== id))
+        }
+      } 
+    })
+    .catch(err => {
+      setError(true)
+      console.log(err);
+    })
+  }
+
+  const handleDeleteSubChapter = (id: number) => {
+    console.log(`Delete chapter ${id}`)
+    axios.delete(`${host}/v1/chapter/${id}`)
+    .then(response => {
+      if (response.status === 204) {
+        // setChapter(chapter.filter(chapter => question.id !== id));
       }
-    });
-  };
+      
+    })
+    .catch(err => {
+      setError(true)
+      console.log(err);
+    })
+  }
 
   useEffect(() => {
     axios
@@ -260,6 +285,7 @@ export const ChapterDetails = () => {
                       {question.text}
                     </span>
                     <IconButton
+                      onClick={() => handleDeleteQuestion(question.id)}
                       style={deleteButtonStyles}
                       icon={<Icon icon="trash2" />}
                     />
@@ -305,7 +331,7 @@ export const ChapterDetails = () => {
                         {chapter.name}
                       </span>
                       <IconButton
-                        onClick={() => handleDeleteChapter}
+                        onClick={() => handleDeleteSubChapter(chapter.id)}
                         style={deleteButtonStyles}
                         icon={<Icon icon="trash2" />}
                       />
