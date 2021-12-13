@@ -53,10 +53,8 @@ export const CreateChapter = () => {
   let handleSubmit = () => {
     
     const nId = Number(id);
-    const nField_id = Number(field_id);
-    const nLevel_id = Number(level_id);
-    // console.log("field_id", field_id, "nfield_id", nField_id);
-    // console.log("level_id", level_id, "nlevel_id", nLevel_id);
+    const nField_id = Number(field_id)
+    const nLevel_id = Number(level_id)
     if (id !== undefined) {
       setChapter({
         ...chapter, 
@@ -65,7 +63,6 @@ export const CreateChapter = () => {
         level_id: 1 
       });
       setLoading(false)
-      console.log("chapter if id :", chapter);
     } else if (field_id && level_id !== undefined) {
       setChapter({
         ...chapter,
@@ -73,7 +70,6 @@ export const CreateChapter = () => {
         level_id: nLevel_id
       });
       setLoading(false)
-      console.log("chapter if field and level", chapter);
     }
   };
 
@@ -81,7 +77,11 @@ export const CreateChapter = () => {
     if (loading === false) {
       axios
         .post(`${host}/v1/chapters/`, {
-          chapter
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*"
+          },
+            chapter
         })
         .then(response => {
           if (response.status === 201) {
@@ -149,8 +149,6 @@ export const CreateChapter = () => {
               }}
               onChange={value => {
                 setChapter({ ...chapter, name: value });
-                // setNameChapter(value);
-                console.log("Name :", value);
               }}
             />
           </FormGroup>

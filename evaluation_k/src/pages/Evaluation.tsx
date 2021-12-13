@@ -130,8 +130,6 @@ export const Evaluation = () => {
   }
 
   const hanldeSubmit = async () => {
-    // set localChoices to evaluation {} then post
-
     let choicesAttributes: choices = [{answer_id: null}]
     await localChoices.forEach(element => {
       if (element.answer_id !== null) {
@@ -179,7 +177,7 @@ export const Evaluation = () => {
     console.log("Evaluation :", evaluation);
     // post api
     let countQuestions: number = 0
-chapters.forEach((elem) => { countQuestions += elem.questions.length })
+    chapters.forEach((elem) => { countQuestions += elem.questions.length })
     console.log("countQuestions : ", countQuestions);
     
     if (evaluation.student_name !== null && evaluation.choices_attributes.length === countQuestions ) {
@@ -192,6 +190,14 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
           evaluation
         })
         .then(response => {
+          if(response.status === 201){
+            //Redirect to résultat
+            const id: number =  response.data.id
+            console.log("id Evaluation:", id);            
+            history.push(`/resultat/${id}`)
+          } else if (response.status === 400) {
+            console.log("Error 400");
+          }
           console.log(response);
         })
         .catch(err => {
@@ -226,14 +232,15 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
           <h2>Error fetching data</h2>
         ) : (
           <>
-            <div 
+            
+            {/* <div 
               className="pagination"
               style={{
                 display: "flex",
                 flexDirection: "row"
               }}
-            >
-              <button
+            > */}
+              {/* <button
                 onClick={prevPage}
                 className={`page ${page === 1 && "disabled"}`}
                 style={{
@@ -244,8 +251,8 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
                 }}
               >
                 &larr;
-              </button>
-              {/* @ts-ignore */}
+              </button> */}
+              {/* @ts-ignore
               {[...Array(totalPages).keys()].map(el => (
                 <button
                   onClick={() => setPage(el + 1)}
@@ -260,9 +267,9 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
                 >
                   {chapters[el].name}
                   {/* {el + 1} */}
-                </button>
-              ))}
-              <button
+                {/* </button> */}
+              {/* ))} */}
+              {/* <button
                 onClick={nextChapter}
                 className={`page ${page === totalPages && "disabled"}`}
                 style={{
@@ -273,9 +280,9 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
                 }}
               >
                 &rarr;
-              </button>
-            </div>
-            
+              </button> */}
+            {/* </div>
+             */}
             <div className="items" style={{width: "100%"}}>
               {chapters
                 .slice(firstContentIndex, lastContentIndex)
@@ -332,7 +339,7 @@ chapters.forEach((elem) => { countQuestions += elem.questions.length })
                 <Modal.Body>
                   <p> Comment t'appelles-tu ? </p>
                   <Input 
-                    placeholder="Nom Prénom"
+                    placeholder="Prénom"
                     type="string"
                     onChange={(value) => setStudentName(value)}
                   />
