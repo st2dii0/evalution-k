@@ -85,7 +85,7 @@ export const CreateChapter = () => {
         })
         .then(response => {
           if (response.status === 201) {
-            history.push(`/chapitres/${response.data.id}`);
+            history.push(`/admin/chapitres/${response.data.id}`);
           } else if (response.status === 400) {
             console.log("Error 400");
           }

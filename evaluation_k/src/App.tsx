@@ -51,13 +51,15 @@ export const App = () => {
   return (
     <UserProvider initialState={userInitialState} reducer={reducer}>
       <Route exact path="/" component={Home} />
-      <Route exact path="/chapitres" component={Chapters} />
-      <Route exact path="/chapitres/:id" component={ChapterDetails} />
-      <Route path="/chapitres/:id/nouveau" component={CreateChapter} />
-      <Route path="/matiere/:field_id/niveau/:level_id/chapitre/nouveau" component={CreateChapter} />
+      <Route exact path="/admin/chapitres" component={Chapters} />
+      <Route exact path="/admin/chapitres/:id" component={ChapterDetails} />
+      <Route path="/admin/chapitres/:id/nouveau" component={CreateChapter} />
+      <Route path="/admin/matiere/:field_id/niveau/:level_id/chapitre/nouveau" component={CreateChapter} />
       <Route path="/evaluation" component={Evaluation} />
+      <Route path="/evaluations" component={Evaluation} />
+      {/* <Route path="/admin/evaluations" component={Evaluation} /> */}
       <Route path="/resultat/:eval_id" component={Result} />
-      <Route path="/chapitres/:id/questions/nouveau" component={CreateQuestions} />
+      <Route path="/admin/chapitres/:id/questions/nouveau" component={CreateQuestions} />
     </UserProvider>
   );
 }

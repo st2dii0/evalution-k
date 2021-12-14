@@ -6,6 +6,8 @@ import axios from "axios";
 import { Container, Content, Button, Icon, IconButton, Header, Modal, Input } from "rsuite";
 
 import { Chapter } from "../models/api/Chapters";
+import { Home } from "./Home";
+
 
 require("dotenv").config();
 
@@ -59,7 +61,7 @@ export const Chapters = () => {
   const handleClickNewchapter = () => {
     history.push({
       // {/*TODO: Change this url when new features comes */}
-      pathname: `/matiere/${1}/niveau/${1}/chapitre/nouveau`
+      pathname: `/admin/matiere/${1}/niveau/${1}/chapitre/nouveau`
     });
   };
 
@@ -120,7 +122,7 @@ export const Chapters = () => {
             {chapters.map((chapter, idx) => (
               <div key={idx}>
                 <div style={chapterDisplayStyles}>
-                  <Link to={`/chapitres/${chapter.id}`}>
+                  <Link to={`/admin/chapitres/${chapter.id}`}>
                     {chapter.number != null ? `${chapter.number}. ` : ""}{" "}
                     {chapter.name}
                   </Link>

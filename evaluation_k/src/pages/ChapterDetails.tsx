@@ -101,13 +101,13 @@ export const ChapterDetails = () => {
 
   const handleClickNewSubChapter = (chapter: Chapter) => {
     history.push({
-      pathname: `/chapitres/${chapter.id}/nouveau`
+      pathname: `/admin/chapitres/${chapter.id}/nouveau`
     });
   };
 
   const handleClickNewQuestion = (chapter: Chapter) => {
     history.push({
-      pathname: `/chapitres/${chapter.id}/questions/nouveau`
+      pathname: `/admin/chapitres/${chapter.id}/questions/nouveau`
     });
   };
 
@@ -178,7 +178,7 @@ export const ChapterDetails = () => {
 
       <Content style={headerStyles}>
         <IconButton
-          onClick={() => history.push("/chapitres")}
+          onClick={() => history.push("/admin/chapitres")}
           icon={<Icon icon="back-arrow" />}
         />
         <h5> CHAPITRE MATHEMATIQUES 3ème </h5>
@@ -323,7 +323,7 @@ export const ChapterDetails = () => {
                     <div>
                       <span
                         onClick={() => {
-                          history.push(`/chapitres/${chapter.id}`);
+                          history.push(`/admin/chapitres/${chapter.id}`);
                           setChapter({ ...chapter, id: chapter.id });
                         }}
                       >
