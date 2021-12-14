@@ -95,7 +95,7 @@ export const CreateQuestions = () => {
             .then(response => {
                 console.log(response);
                 if (response.status === 201) {
-                    history.push(`/chapitres/${idChapter}`);
+                    history.push(`/admin/chapitres/${idChapter}`);
                 }else if (response.status === 400) {
                     console.log("Error 400");
                 }
