@@ -44,15 +44,6 @@ const defaultChapter: Chapter = {
   ]
 };
 
-const chapterStyles: CSSProperties = {
-  marginLeft: 30,
-  marginTop: 60,
-  marginBottom: 50
-};
-
-const chapterDisplayStyles: CSSProperties = {
-  display: "flex"
-};
 
 const buttonStyles: CSSProperties = {
   backgroundColor: "#0D67F2",
@@ -65,13 +56,6 @@ const deleteButtonStyles: CSSProperties = {
   marginLeft: 50
 };
 
-const buttonBodyStyles: CSSProperties = {
-  width: 147,
-  height: 30,
-  backgroundColor: "#0D67F2",
-  color: "#ffffff",
-  borderRadius: 4
-};
 
 const headerStyles: CSSProperties = {
   display: "flex",
@@ -87,7 +71,6 @@ const headerStyles: CSSProperties = {
 export const ChapterDetails = () => {
   const [{ user }] = UserGlobalState();
   const history = useHistory();
-  const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const host = process.env.REACT_APP_BASEURL;
   const [chapter, setChapter] = useState<Chapter>(defaultChapter);
@@ -119,8 +102,10 @@ export const ChapterDetails = () => {
     axios.delete(`${host}/v1/questions/${id}`)
     .then(response => {
       if (response.status === 204) {
+        console.log(`Response onDelete `, response.data);
+        console.log(`Question state after delete :`, question);
         if(question !== undefined){
-          setQuestion(question.filter(question => question.id !== id))
+          setChapter({...chapter, questions: chapter.questions.filter(question => question.id !== id)})
         }
       } 
     })
@@ -140,6 +125,7 @@ export const ChapterDetails = () => {
       
     })
     .catch(err => {
+      
       setError(true)
       console.log(err);
     })
@@ -153,7 +139,7 @@ export const ChapterDetails = () => {
         }
       })
       .then(response => {
-        setChapter(response.data);
+        setChapter(response.data);        
         setLoading(false);
       })
       .catch(err => {
@@ -161,6 +147,10 @@ export const ChapterDetails = () => {
         setLoading(false);
       });
   }, []);
+  
+  useEffect(() => {
+    setQuestion(chapter.questions)
+  },[question])
 
   return (
     <Container>
